@@ -61,6 +61,8 @@ static NSString *SettingsCellID = @"SettingsCell";
         NSLog(@"Logging out...");
         NSString *appDomain = [[NSBundle mainBundle] bundleIdentifier];
         [[NSUserDefaults standardUserDefaults] removePersistentDomainForName:appDomain];
+        
+        // Return to login screen
         [self.navigationController popToRootViewControllerAnimated:YES];
     }
 }

@@ -23,6 +23,8 @@ enum {MENU_ITEM_HEIGHT = 90};
 - (void)viewDidLoad {
     [super viewDidLoad];
     
+    [self.navigationController setNavigationBarHidden:NO animated:YES];
+    
     [self.tableView registerClass:[UITableViewCell class] forCellReuseIdentifier:CellID];
     
     self.navigationItem.rightBarButtonItem = self.settingsBarButton;
@@ -88,7 +90,6 @@ enum {MENU_ITEM_HEIGHT = 90};
         [self.navigationController pushViewController:myTickets animated:YES];
     }
 }
-
 
 /*
 // Override to support conditional editing of the table view.

@@ -8,6 +8,7 @@
 
 #import <UIKit/UIKit.h>
 #import "MainMenuTableViewController.h"
+#import "ActivityIndicatorView.h"
 
 @interface LoginViewController : UIViewController
 

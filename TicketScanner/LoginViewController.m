@@ -10,6 +10,7 @@
 
 @interface LoginViewController ()
 
+@property(nonatomic, strong) ActivityIndicatorView *activityIndicator;
 @property(nonatomic, strong) UIButton *submitButton;
 @property(nonatomic, strong) UITextField *userEmailField;
 @property(nonatomic, strong) UITextField *userPasswordField;
@@ -28,6 +29,8 @@ static float FIELD_HEIGHT = 60;
     
     self.navigationController.navigationBarHidden = YES;
     
+    [self.view addSubview: self.activityIndicator];
+    
     [self.view addSubview:self.userEmailField];
     [self.view addSubview:self.userPasswordField];
     
@@ -35,8 +38,16 @@ static float FIELD_HEIGHT = 60;
     [self.submitButton addTarget:self action:@selector(didTapSubmitButton:) forControlEvents:UIControlEventTouchUpInside];
 }
 
+- (void)viewWillAppear:(BOOL)animated {
+    [self.navigationController setNavigationBarHidden:YES animated:YES];
+}
+
 - (void) didTapSubmitButton:(id) sender
 {
+    // Temporarily block UI while waiting for response from server
+    [self.activityIndicator startAnimating];
+    self.submitButton.alpha = 0.5;
+    
     // Generate test JSON data
     NSError *jsonError;
     NSDictionary *dataDict = [NSDictionary dictionaryWithObjects:@[@"1", @"test@test.com", @"runnitt"] forKeys:@[@"id", @"email", @"password"]];
@@ -80,6 +91,8 @@ static float FIELD_HEIGHT = 60;
 }
 
 - (void) handleLoginResponse:(NSDictionary *)response {
+    self.submitButton.alpha = 1.0;
+
     if ([[response valueForKey:@"status"] isEqualToString:@"error"]) {
         NSLog(@"Server error: cannot process request.");
     }
@@ -90,13 +103,21 @@ static float FIELD_HEIGHT = 60;
         NSString *userEmail = [response valueForKey:@"email"];
         [[NSUserDefaults standardUserDefaults] setValue:@(userId) forKey:@"userId"];
         [[NSUserDefaults standardUserDefaults] setValue:userEmail forKey:@"userEmail"];
+        
+        [self.activityIndicator stopAnimating];
         MainMenuTableViewController *mainMenu = [[MainMenuTableViewController alloc] init];
         [self.navigationController pushViewController:mainMenu animated:YES];
-        [self.navigationController setNavigationBarHidden:NO animated:YES];
     }
     else {
         NSLog(@"Invalid login.");
     }
+}
+
+- (ActivityIndicatorView *)activityIndicator {
+    if (!_activityIndicator) {
+        _activityIndicator = [[ActivityIndicatorView alloc] initWithFrame:self.view.frame];
+    }
+    return _activityIndicator;
 }
 
 - (UITextField *) userEmailField {
