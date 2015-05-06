@@ -12,7 +12,6 @@
 @interface ManualCheckinFormViewController ()
 
 @property(nonatomic) ServerCommunicator *webServer;
-@property(nonatomic) NSURL *postURL;
 @property(nonatomic) UIAlertController *alertController; // iOS 8.0+
 @property(nonatomic) UIAlertView *alertView; // iOS < 8.0
 @property(nonatomic) ActivityIndicatorView *activityIndicator;
@@ -28,20 +27,14 @@
 -(void) viewDidLoad {
     [super viewDidLoad];
     
-    // TODO: create a custom FXForm that is dynamically generated based on the data
-    // that the user wants collect from the guests (JSON -> NSDictionary: see Dynamic example)
+    // TODO: build a dynamic FXForm from JSON (look at dynamic example)
     
     [self.view addSubview:self.activityIndicator];
     
-    self.webServer = [ServerCommunicator sharedDatabase];
-    self.webServer.delegate = self;
-    
     self.formController.form = [[ManualCheckinForm alloc] init];
     self.formController.tableView = self.tableView;
-    self.postURL = [NSURL URLWithString:@"https://docs.google.com/forms/d/1-q7M81pv8Q_c0XazDr-mrhUxWfN5nvub71VH_pA-JJk/formResponse"];
     
     self.tableView.backgroundColor = [UIColor colorWithRed:0.3 green:0.3 blue:0.3 alpha:1.0];
-    // TODO: update colors/appearance of tableView
     self.tableView.separatorColor = [UIColor blackColor];
 }
 
@@ -56,14 +49,14 @@
     self.webServer.delegate = self;
 
     ManualCheckinForm *form = cell.field.form;
-    NSMutableArray *formValues = [[NSMutableArray alloc] init];
+    NSMutableDictionary *fieldValues = [[NSMutableDictionary alloc] init];
     BOOL formIsValid = YES;
         
     for (FXFormField *field in [form fields]) {
-        id fieldValue = [form valueForKey: [field valueForKey:@"key"]];
-        if ( [fieldValue length] ) {
+        id val = [form valueForKey: [field valueForKey:@"key"]];
+        if ( [val length] ) {
             if ( [[field valueForKey:@"key"] isEqual:@"email"] ) {
-                formIsValid = [self validateEmailAddress:fieldValue];
+                formIsValid = [self validateEmailAddress:val];
                 if (!formIsValid) {
                     break;
                 }
@@ -74,12 +67,13 @@
             [self displayAlertWithTitle:@"Please Complete Form"];
             break;
         }
-        [formValues addObject:fieldValue];
+        [fieldValues setObject:val forKey:[field valueForKey:@"key"]];
     }
     if (formIsValid) {
-        NSLog(@"%@",formValues);
+        NSLog(@"%@",fieldValues);
         [self.activityIndicator startAnimating];
-        [self.webServer postData:formValues toURL:self.postURL];
+        # warning need to submit current eventID along with form values
+        [self.webServer performServerRequestType:@"checkinManual" withData:fieldValues];
     }
 }
 
@@ -138,7 +132,7 @@
     return _alertView;
 }
 
--(void) studentDataDidFinishUploading {
+-(void) handleServerResponse:(NSDictionary *)response {
     [self.activityIndicator stopAnimating];
     [self displayAlertWithTitle:@"Check In Successful!"];
 }

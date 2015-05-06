@@ -10,4 +10,7 @@
 
 @interface CheckinTabBarController : UITabBarController
 
+// TODO: this number is set before the view controller is pushed onto the navigation stack
+@property(nonatomic) NSInteger eventId;
+
 @end

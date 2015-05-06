@@ -11,9 +11,6 @@
 
 @interface ScannerViewController ()
 
-@property(nonatomic) NSArray *studentAttributes;
-
-@property(nonatomic) NSURL *postURL;
 @property(nonatomic) QRCodeCaptureView *scannerView;
 @property(nonatomic) ServerCommunicator *webServer;
 
@@ -33,19 +30,15 @@
     
     self.view.backgroundColor = [UIColor colorWithRed:0.3 green:0.3 blue:0.3 alpha:1.0];
     
-    self.postURL = [NSURL URLWithString:@"https://docs.google.com/forms/d/1-q7M81pv8Q_c0XazDr-mrhUxWfN5nvub71VH_pA-JJk/formResponse"];
-    
-    self.webServer = [ServerCommunicator sharedDatabase];
-    
 //    CGRect scannerViewFrame = CGRectMake(0, 20, window.size.width, window.size.width);
     CGRect scannerViewFrame = window;
     self.scannerView = [[QRCodeCaptureView alloc] initWithFrame:scannerViewFrame message:@"Tap SCAN Button"];
     self.scannerView.delegate = self;
     [self.view addSubview:self.scannerView];
     
-//    self.startStopButton.center = CGPointMake(window.size.width / 2, window.size.height - 120);
-//    [self.startStopButton addTarget:self action:@selector(startStopReading) forControlEvents:UIControlEventTouchUpInside];
-//    [self.view addSubview:self.startStopButton];
+    self.startStopButton.center = CGPointMake(window.size.width / 2, window.size.height - 120);
+    [self.startStopButton addTarget:self action:@selector(startStopReading) forControlEvents:UIControlEventTouchUpInside];
+    [self.view addSubview:self.startStopButton];
     
     [self.view addSubview:self.firstNameLabel];
     [self.view addSubview:self.lastNameLabel];
@@ -125,7 +118,8 @@
     }
 }
 
--(void) studentDataDidFinishUploading {
+-(void) handleServerResponse:(NSDictionary *)response {
+    // notify user if ticket is valid/invalid,
     [self playWhistleSound];
     [self startStopReading];
     NSLog(@"Scanned data uploaded to database successfully.");
@@ -135,18 +129,32 @@
     // TODO: play "beep" sound for valid/successful scan here...
     
     // Parse the scanned metadata string, split it into separate objects/strings
-    [self serializeScannedMetadata:metadataObjects];
+    NSDictionary *ticketData = [self generateJSONWithScannedData:metadataObjects];
     
-    [self.webServer postData:self.studentAttributes toURL:self.postURL];
+    if (!ticketData) {
+        // alert user of invalid ticket
+        return;
+    }
     
-    self.firstNameLabel.text = self.studentAttributes[0];
-    self.lastNameLabel.text = self.studentAttributes[1];
+    [self.webServer performServerRequestType:@"checkinTicket" withData:ticketData];
 }
 
--(void) serializeScannedMetadata:(NSArray *)metadata {
-    // TODO: split scanned data string into separate objects
-    NSLog(@"Scanned Data: %@", metadata);
-    self.studentAttributes = metadata;
+-(NSDictionary *) generateJSONWithScannedData:(NSArray *)metadata {
+    // TODO: convert json string to dictionary
+    if ([metadata count] != 1) {
+        return nil;
+    }
+    
+    NSError *jsonError;
+    NSString *jsonString = metadata[0];
+    NSData *rawData = [jsonString dataUsingEncoding:NSUTF8StringEncoding];
+    NSDictionary *jsonData = [NSJSONSerialization JSONObjectWithData:rawData options:kNilOptions error:&jsonError];
+    
+    if (jsonError) {
+        return nil;
+    }
+    
+    return jsonData;
 }
 
 - (AVAudioPlayer *)whistleSound {

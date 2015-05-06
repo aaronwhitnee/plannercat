@@ -31,6 +31,7 @@
 		0C93F9D71AF9ABE500EC3735 /* Ticket.m in Sources */ = {isa = PBXBuildFile; fileRef = 0C93F9D61AF9ABE500EC3735 /* Ticket.m */; };
 		0C93F9DA1AF9AD5A00EC3735 /* EventsDataSource.m in Sources */ = {isa = PBXBuildFile; fileRef = 0C93F9D91AF9AD5A00EC3735 /* EventsDataSource.m */; };
 		0C93F9DD1AF9AD6E00EC3735 /* TicketsDataSource.m in Sources */ = {isa = PBXBuildFile; fileRef = 0C93F9DC1AF9AD6E00EC3735 /* TicketsDataSource.m */; };
+		0C93F9E21AFA08D500EC3735 /* RSVPListTableViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 0C93F9E11AFA08D500EC3735 /* RSVPListTableViewController.m */; };
 		0C9874B21AA04DB9006A2F9A /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 0C9874B11AA04DB9006A2F9A /* main.m */; };
 		0C9874B51AA04DB9006A2F9A /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 0C9874B41AA04DB9006A2F9A /* AppDelegate.m */; };
 		0C9874B81AA04DB9006A2F9A /* ScannerViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 0C9874B71AA04DB9006A2F9A /* ScannerViewController.m */; };
@@ -93,6 +94,8 @@
 		0C93F9DB1AF9AD6E00EC3735 /* TicketsDataSource.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TicketsDataSource.h; sourceTree = "<group>"; };
 		0C93F9DC1AF9AD6E00EC3735 /* TicketsDataSource.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TicketsDataSource.m; sourceTree = "<group>"; };
 		0C93F9DF1AF9D2C800EC3735 /* DataSourceReadyForUseDelegate.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = DataSourceReadyForUseDelegate.h; sourceTree = "<group>"; };
+		0C93F9E01AFA08D500EC3735 /* RSVPListTableViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = RSVPListTableViewController.h; sourceTree = "<group>"; };
+		0C93F9E11AFA08D500EC3735 /* RSVPListTableViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = RSVPListTableViewController.m; sourceTree = "<group>"; };
 		0C9874AC1AA04DB9006A2F9A /* TicketScanner.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = TicketScanner.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		0C9874B01AA04DB9006A2F9A /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		0C9874B11AA04DB9006A2F9A /* main.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = main.m; sourceTree = "<group>"; };
@@ -171,6 +174,8 @@
 				0C9874B71AA04DB9006A2F9A /* ScannerViewController.m */,
 				0C9874B91AA04DB9006A2F9A /* ManualCheckinFormViewController.h */,
 				0C9874BA1AA04DB9006A2F9A /* ManualCheckinViewController.m */,
+				0C93F9E01AFA08D500EC3735 /* RSVPListTableViewController.h */,
+				0C93F9E11AFA08D500EC3735 /* RSVPListTableViewController.m */,
 			);
 			name = "Checking In";
 			sourceTree = "<group>";
@@ -445,6 +450,7 @@
 				0C34386D1AA93E8B002E1ED5 /* ServerCommunicator.m in Sources */,
 				0C1741DB1AF8972D00C9269A /* SettingsTableViewController.m in Sources */,
 				0C265C021AF6B24A00508A26 /* LoginViewController.m in Sources */,
+				0C93F9E21AFA08D500EC3735 /* RSVPListTableViewController.m in Sources */,
 				0CA73F791AAB92640049060D /* QRCodeCaptureView.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
