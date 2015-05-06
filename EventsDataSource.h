@@ -7,7 +7,8 @@
 //
 
 #import <Foundation/Foundation.h>
+#import "DataSourceReadyForUseDelegate.h"
 
-@interface EventsDataSource : NSObject
+@interface EventsDataSource : NSObject<DataSourceReadyForUseDelegate>
 
 @end

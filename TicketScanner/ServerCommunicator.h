@@ -10,7 +10,7 @@
 
 @protocol ConnectionFinishedDelegate;
 
-@interface ServerCommunicator : NSObject<NSURLConnectionDelegate>
+@interface ServerCommunicator : NSObject<NSURLConnectionDelegate, NSURLConnectionDataDelegate>
 
 @property(nonatomic, weak) id<ConnectionFinishedDelegate> delegate;
 

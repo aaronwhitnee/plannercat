@@ -13,7 +13,7 @@
 
 @protocol DataSourceReadyForUseDelegate<NSObject>
 
-@optional
+@required
 
 -(void) dataSourceReadyForUse: (id<ConnectionFinishedDelegate>) dataSource;
 

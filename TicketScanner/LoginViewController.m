@@ -28,6 +28,7 @@ static float FIELD_HEIGHT = 60;
     
     self.view.backgroundColor = [UIColor whiteColor];
     
+    // you ain't goin' nowhere till you login first!
     self.navigationController.navigationBarHidden = YES;
     
     [self.view addSubview: self.activityIndicator];
@@ -54,8 +55,8 @@ static float FIELD_HEIGHT = 60;
     
     // Initialize data for server request
     NSString *reqType = @"login";
-    NSDictionary *userInfo = [NSDictionary dictionaryWithObjects:@[@"1", @"test@test.com", @"runnitt"]
-                                                         forKeys:@[@"userID", @"email", @"password"]];
+    NSDictionary *userInfo = [NSDictionary dictionaryWithObjects:@[@"1", @"runnitt"]
+                                                         forKeys:@[@"userID", @"password"]];
     
     // Post login information to server
     [self.webServer performServerRequestType:reqType withData:userInfo];

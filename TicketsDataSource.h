@@ -7,7 +7,8 @@
 //
 
 #import <Foundation/Foundation.h>
+#import "DataSourceReadyForUseDelegate.h"
 
-@interface TicketsDataSource : NSObject
+@interface TicketsDataSource : NSObject<DataSourceReadyForUseDelegate>
 
 @end

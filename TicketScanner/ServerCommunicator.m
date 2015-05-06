@@ -11,9 +11,9 @@
 @interface ServerCommunicator()
 
 @property(nonatomic) NSURL *url;
-@property(nonatomic) NSMutableURLRequest *request;
-@property(nonatomic) NSDictionary *jsonResponse;
-@property(nonatomic) NSMutableData *receivedData;
+@property(nonatomic, strong) NSMutableURLRequest *request;
+@property(nonatomic, strong) NSDictionary *jsonResponse;
+@property(nonatomic, strong) NSMutableData *receivedData;
 @property(nonatomic) NSURLConnection *connection;
 
 @end
@@ -21,7 +21,17 @@
 @implementation ServerCommunicator
 
 - (NSMutableData *) receivedData {
+    if (!_receivedData) {
+        _receivedData = [NSMutableData new];
+    }
     return _receivedData;
+}
+
+- (NSDictionary *) jsonResponse {
+    if (!_jsonResponse) {
+        _jsonResponse = [NSDictionary new];
+    }
+    return _jsonResponse;
 }
 
 - (void)performServerRequestType:(NSString *)requestType withData:(NSDictionary *)data
@@ -32,8 +42,8 @@
     
     // Generate JSON data
     NSError *jsonError;
-    NSDictionary *requestData = [NSDictionary dictionaryWithObjects:@[requestType, data] forKeys:@[@"reqType", @"request"]];
-    NSData *jsonData = [NSJSONSerialization dataWithJSONObject:requestData
+    NSDictionary *requestData = [NSDictionary dictionaryWithObjects:@[requestType, data] forKeys:@[@"requestType", @"request"]];
+    NSData *jsonRequestData = [NSJSONSerialization dataWithJSONObject:requestData
                                                        options:kNilOptions
                                                          error:&jsonError];
     if (jsonError) {
@@ -46,19 +56,33 @@
     self.request = [NSMutableURLRequest requestWithURL:[self.url standardizedURL]];
     self.request.HTTPMethod = @"POST";
     [self.request setValue:@"application/json; charset=utf-8" forHTTPHeaderField:@"Content-Type"];
-    [self.request setValue:[NSString stringWithFormat:@"%lu", jsonData.length] forHTTPHeaderField:@"Content-Length"];
-    self.request.HTTPBody = jsonData;
+    [self.request setValue:[NSString stringWithFormat:@"%lu", jsonRequestData.length] forHTTPHeaderField:@"Content-Length"];
+    self.request.HTTPBody = jsonRequestData;
     
     self.connection = [[NSURLConnection alloc] initWithRequest:self.request delegate:self startImmediately:YES];
 }
 
+-(void) connection:(NSURLConnection *)connection didReceiveResponse:(NSURLResponse *)response {
+    NSLog(@"%s: %@", __func__, response);
+    self.jsonResponse = nil;
+    self.receivedData = nil;
+}
+
 - (void) connection:(NSURLConnection *)connection didReceiveData:(NSData *)data {
+    NSLog(@"Received %lu bytes of data.", [data length]);
     [self.receivedData appendData:data];
 }
 
 - (void) connectionDidFinishLoading:(NSURLConnection *)connection {
+    NSError *jsonError;
+    NSDictionary *responseJSON = [NSJSONSerialization JSONObjectWithData:self.receivedData options:kNilOptions error:&jsonError];
+    NSLog(@"Received data: %@", responseJSON);
+    
     if ([self.delegate respondsToSelector:@selector(handleServerResponse:)]) {
         self.jsonResponse = [self generateJSONWithReceivedData];
+        if (self.jsonResponse == nil) {
+            NSLog(@"No data has been received.");
+        }
         [self.delegate handleServerResponse:self.jsonResponse];
     }
 }
@@ -70,6 +94,9 @@
 }
 
 -(NSDictionary *) generateJSONWithReceivedData {
+    if (self.receivedData == nil) {
+        return nil;
+    }
     NSError *jsonError;
     NSDictionary *json = [NSJSONSerialization JSONObjectWithData:self.receivedData options:kNilOptions error:&jsonError];
     if (jsonError) {
