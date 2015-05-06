@@ -7,7 +7,7 @@
 //
 
 #import <UIKit/UIKit.h>
-#import "DatabaseCommunicator.h"
+#import "ServerCommunicator.h"
 #import "QRCodeCaptureView.h"
 
 @interface ScannerViewController : UIViewController <ConnectionFinishedDelegate, ScannedDataReadyForUseDelegate>

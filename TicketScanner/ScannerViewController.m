@@ -15,7 +15,7 @@
 
 @property(nonatomic) NSURL *postURL;
 @property(nonatomic) QRCodeCaptureView *scannerView;
-@property(nonatomic) DatabaseCommunicator *dbCommunicator;
+@property(nonatomic) ServerCommunicator *webServer;
 
 @property(nonatomic) UIButton *startStopButton;
 @property(nonatomic, strong, readwrite) AVAudioPlayer *whistleSound;
@@ -35,8 +35,7 @@
     
     self.postURL = [NSURL URLWithString:@"https://docs.google.com/forms/d/1-q7M81pv8Q_c0XazDr-mrhUxWfN5nvub71VH_pA-JJk/formResponse"];
     
-    self.dbCommunicator = [DatabaseCommunicator sharedDatabase];
-    self.dbCommunicator.delegate = self;
+    self.webServer = [ServerCommunicator sharedDatabase];
     
 //    CGRect scannerViewFrame = CGRectMake(0, 20, window.size.width, window.size.width);
     CGRect scannerViewFrame = window;
@@ -55,6 +54,14 @@
 - (void)didReceiveMemoryWarning {
     [super didReceiveMemoryWarning];
     // Dispose of any resources that can be recreated.
+}
+
+- (ServerCommunicator *) webServer {
+    if (!_webServer) {
+        _webServer = [[ServerCommunicator alloc] init];
+        _webServer.delegate = self;
+    }
+    return _webServer;
 }
 
 -(UIButton *) startStopButton {
@@ -103,7 +110,7 @@
 }
 
 -(void) startStopReading {
-    self.dbCommunicator.delegate = self;
+    self.webServer.delegate = self;
 
     if (!self.scannerView.isReading) {
         if ([self.scannerView startReading]) {
@@ -130,7 +137,7 @@
     // Parse the scanned metadata string, split it into separate objects/strings
     [self serializeScannedMetadata:metadataObjects];
     
-    [self.dbCommunicator postData:self.studentAttributes toURL:self.postURL];
+    [self.webServer postData:self.studentAttributes toURL:self.postURL];
     
     self.firstNameLabel.text = self.studentAttributes[0];
     self.lastNameLabel.text = self.studentAttributes[1];

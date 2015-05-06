@@ -1,5 +1,5 @@
 //
-//  TabBarController.h
+//  CheckinTabBarController.h
 //  TicketScanner
 //
 //  Created by Aaron Robinson on 3/14/15.
@@ -8,6 +8,6 @@
 
 #import <UIKit/UIKit.h>
 
-@interface TabBarController : UITabBarController
+@interface CheckinTabBarController : UITabBarController
 
 @end

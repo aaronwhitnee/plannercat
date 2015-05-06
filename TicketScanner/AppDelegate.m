@@ -7,7 +7,7 @@
 //
 
 #import "AppDelegate.h"
-#import "TabBarController.h"
+#import "CheckinTabBarController.h"
 #import "ScannerViewController.h"
 #import "ManualCheckinFormViewController.h"
 #import "LoginViewController.h"
@@ -20,7 +20,7 @@
     self.window = [[UIWindow alloc] initWithFrame:[[UIScreen mainScreen] bounds]];
     [self.window makeKeyAndVisible];
     
-//    TabBarController *checkinViewController = [[TabBarController alloc] init];
+//    CheckinTabBarController *checkinViewController = [[CheckinTabBarController alloc] init];
 //
 //    ScannerViewController *svc = [[ScannerViewController alloc] init];
 //    ManualCheckinFormViewController *mvc = [[ManualCheckinFormViewController alloc] init];

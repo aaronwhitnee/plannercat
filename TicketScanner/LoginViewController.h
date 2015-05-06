@@ -7,9 +7,12 @@
 //
 
 #import <UIKit/UIKit.h>
+#import "ServerCommunicator.h"
 #import "MainMenuTableViewController.h"
 #import "ActivityIndicatorView.h"
 
-@interface LoginViewController : UIViewController
+@interface LoginViewController : UIViewController<ConnectionFinishedDelegate>
+
+
 
 @end

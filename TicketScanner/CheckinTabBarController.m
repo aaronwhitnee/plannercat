@@ -1,18 +1,18 @@
 //
-//  TabBarController.m
+//  CheckinTabBarController.m
 //  TicketScanner
 //
 //  Created by Aaron Robinson on 3/14/15.
 //  Copyright (c) 2015 SSU. All rights reserved.
 //
 
-#import "TabBarController.h"
+#import "CheckinTabBarController.h"
 
-@interface TabBarController ()
+@interface CheckinTabBarController ()
 
 @end
 
-@implementation TabBarController
+@implementation CheckinTabBarController
 
 - (void)viewDidLoad {
     [super viewDidLoad];

@@ -10,7 +10,7 @@
 #import <AVFoundation/AVFoundation.h>
 #import "FXForms.h"
 #import "ManualCheckinForm.h"
-#import "DatabaseCommunicator.h"
+#import "ServerCommunicator.h"
 
 @interface ManualCheckinFormViewController : FXFormViewController <ConnectionFinishedDelegate>
 

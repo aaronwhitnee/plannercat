@@ -14,6 +14,7 @@
 @property(nonatomic, strong) UIButton *submitButton;
 @property(nonatomic, strong) UITextField *userEmailField;
 @property(nonatomic, strong) UITextField *userPasswordField;
+@property(nonatomic, strong) ServerCommunicator *webServer;
 
 @end
 
@@ -30,7 +31,6 @@ static float FIELD_HEIGHT = 60;
     self.navigationController.navigationBarHidden = YES;
     
     [self.view addSubview: self.activityIndicator];
-    
     [self.view addSubview:self.userEmailField];
     [self.view addSubview:self.userPasswordField];
     
@@ -42,55 +42,27 @@ static float FIELD_HEIGHT = 60;
     [self.navigationController setNavigationBarHidden:YES animated:YES];
 }
 
-- (void) didTapSubmitButton:(id) sender
-{
-    // Temporarily block UI while waiting for response from server
+- (void) viewDidAppear:(BOOL)animated {
+    [self.userPasswordField becomeFirstResponder];
+    [self.userEmailField becomeFirstResponder];
+}
+
+- (void) didTapSubmitButton:(id) sender{
+    // Show pretty spinny thingy while waiting for response from server
     [self.activityIndicator startAnimating];
     self.submitButton.alpha = 0.5;
     
-    // Generate test JSON data
-    NSError *jsonError;
-    NSDictionary *dataDict = [NSDictionary dictionaryWithObjects:@[@"1", @"test@test.com", @"runnitt"] forKeys:@[@"id", @"email", @"password"]];
-    NSData *jsonData = [NSJSONSerialization dataWithJSONObject:dataDict
-                                                       options:kNilOptions
-                                                         error:&jsonError];
-    if (jsonError) {
-        NSLog(@"Error generating JSON: %@", jsonError);
-        return;
-    }
+    // Initialize data for server request
+    NSString *reqType = @"login";
+    NSDictionary *userInfo = [NSDictionary dictionaryWithObjects:@[@"1", @"test@test.com", @"runnitt"]
+                                                         forKeys:@[@"userID", @"email", @"password"]];
     
-    // setting up the POST request
-    NSURL *url = [NSURL URLWithString:@"http://marshall.bpwebdesign.com/ios/login.php"];
-    NSMutableURLRequest *request = [NSMutableURLRequest requestWithURL:[url standardizedURL]];
-    request.HTTPMethod = @"POST";
-    [request setValue:@"application/json; charset=utf-8" forHTTPHeaderField:@"Content-Type"];
-    [request setValue:[NSString stringWithFormat:@"%lu", jsonData.length] forHTTPHeaderField:@"Content-Length"];
-    request.HTTPBody = jsonData;
-    
-    // send the request asynchronously
-    [NSURLConnection sendAsynchronousRequest:request
-                                       queue:[[NSOperationQueue alloc] init]
-                           completionHandler:^(NSURLResponse *response, NSData *data, NSError *error) {
-        if ([data length] > 0 && !error) {
-            NSError *jsonError;
-            NSDictionary *responseJSON = [NSJSONSerialization JSONObjectWithData:data options:kNilOptions error:&jsonError];
-            // Update UI after successful login on main queue
-            dispatch_async(dispatch_get_main_queue(), ^{
-                [self handleLoginResponse:responseJSON];
-            });
-            NSString *responseString = [[NSString alloc] initWithData:data encoding:NSUTF8StringEncoding];
-            NSLog(@"%s:\n RESPONSE JSON:\n %@", __func__, responseString);
-        }
-        else if ([data length] == 0 && !error) {
-            NSLog(@"%s: Empty response.", __func__);
-        }
-        else if (error) {
-            NSLog(@"%s: ", __func__);
-        }
-    }];
+    // Post login information to server
+    [self.webServer performServerRequestType:reqType withData:userInfo];
 }
 
-- (void) handleLoginResponse:(NSDictionary *)response {
+// Required ConnectionFinishedDelegate protocol method - checks for valid login
+-(void) handleServerResponse:(NSDictionary *)response {
     self.submitButton.alpha = 1.0;
 
     if ([[response valueForKey:@"status"] isEqualToString:@"error"]) {
@@ -111,6 +83,14 @@ static float FIELD_HEIGHT = 60;
     else {
         NSLog(@"Invalid login.");
     }
+}
+
+- (ServerCommunicator *) webServer {
+    if (!_webServer) {
+        _webServer = [[ServerCommunicator alloc] init];
+        _webServer.delegate = self;
+    }
+    return _webServer;
 }
 
 - (ActivityIndicatorView *)activityIndicator {
@@ -146,6 +126,7 @@ static float FIELD_HEIGHT = 60;
         
         _userPasswordField.placeholder = @"Password";
         _userPasswordField.textAlignment = NSTextAlignmentCenter;
+        _userPasswordField.keyboardType = UIKeyboardTypeEmailAddress;
         _userPasswordField.secureTextEntry = YES;
     }
     return _userPasswordField;

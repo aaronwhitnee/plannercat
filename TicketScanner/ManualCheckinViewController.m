@@ -11,7 +11,7 @@
 
 @interface ManualCheckinFormViewController ()
 
-@property(nonatomic) DatabaseCommunicator *dbCommunicator;
+@property(nonatomic) ServerCommunicator *webServer;
 @property(nonatomic) NSURL *postURL;
 @property(nonatomic) UIAlertController *alertController; // iOS 8.0+
 @property(nonatomic) UIAlertView *alertView; // iOS < 8.0
@@ -33,8 +33,8 @@
     
     [self.view addSubview:self.activityIndicator];
     
-    self.dbCommunicator = [DatabaseCommunicator sharedDatabase];
-    self.dbCommunicator.delegate = self;
+    self.webServer = [ServerCommunicator sharedDatabase];
+    self.webServer.delegate = self;
     
     self.formController.form = [[ManualCheckinForm alloc] init];
     self.formController.tableView = self.tableView;
@@ -53,7 +53,7 @@
 }
 
 -(void) submitManualCheckinForm:(UITableViewCell<FXFormFieldCell> *)cell {
-    self.dbCommunicator.delegate = self;
+    self.webServer.delegate = self;
 
     ManualCheckinForm *form = cell.field.form;
     NSMutableArray *formValues = [[NSMutableArray alloc] init];
@@ -79,7 +79,7 @@
     if (formIsValid) {
         NSLog(@"%@",formValues);
         [self.activityIndicator startAnimating];
-        [self.dbCommunicator postData:formValues toURL:self.postURL];
+        [self.webServer postData:formValues toURL:self.postURL];
     }
 }
 

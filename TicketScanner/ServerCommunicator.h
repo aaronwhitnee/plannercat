@@ -1,5 +1,5 @@
 //
-//  DatabaseCommunicator.h
+//  ServerCommunicator.h
 //  TicketScanner
 //
 //  Created by Aaron Robinson on 3/5/15.
@@ -10,17 +10,17 @@
 
 @protocol ConnectionFinishedDelegate;
 
-@interface DatabaseCommunicator : NSObject <NSURLConnectionDelegate>
+@interface ServerCommunicator : NSObject<NSURLConnectionDelegate>
 
 @property(nonatomic, weak) id<ConnectionFinishedDelegate> delegate;
 
-+ (DatabaseCommunicator *) sharedDatabase;
-- (void) postData:(NSArray *)data toURL:(NSURL *)url;
+- (void) performServerRequestType:(NSString *)requestType
+                         withData:(NSDictionary *)data;
 
 @end
 
 @protocol ConnectionFinishedDelegate <NSObject>
 @required
--(void) studentDataDidFinishUploading;
+-(void) handleServerResponse:(NSDictionary *)response;
 @end
 
