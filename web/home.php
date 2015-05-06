@@ -7,7 +7,8 @@
 	if (isset($_SESSION['admin'])){
 		echo "
 			<h2>Admin Home Page</h2>
-			<a href='create.php'>Create an event</a>
+			<a href='create.php'>Create an event</a><br>
+			<a href='stats.php'>View Event Stats</a>
 		";
 	}
 

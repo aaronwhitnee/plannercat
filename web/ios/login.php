@@ -14,26 +14,24 @@ fclose($handle);
 // Convert raw data to JSON data
 $post_data = json_decode($http_raw_post_data, true);
 
+$response = array(
+  "status" => "error",
+  "code" => 0,
+  "valid" => 0
+);
+
 // Check if JSON is valid
-$response = array();
 if (is_array($post_data)) {
   $user_cred = array("id" => $post_data["id"], "pw" => $post_data["password"]);
   $valid = login($user_cred) ? 1 : 0;
-
-  $response = array(
-    "status" => "ok",
-    "code" => 0,
-    "valid" => $valid,
-    // "original_request" => $post_data
-    );
+  $response["status"] = "ok";
+  $response["code"] = -1;
+  $response["valid"] = $valid;
 }
 else {
-  $response = array(
-    "status" => "error",
-    "code" => -1,
-    "valid" => 0,
-    // "original_request" => $post_data
-    );
+  $response["status"] = "error";
+  $response["code"] = -1;
+  $response["valid"] = 0;
 }
 
 // Echo a JSON response back to iOS app
