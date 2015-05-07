@@ -36,6 +36,14 @@ if (is_array($request)) {
   // Check in via scanning a QR Code ticket
   else if ($requestType == "checkinTicket") {
     $response["status"] = "ok";
+
+    $eventID = $request["request"]["eventID"];
+    $userID = $request["request"]["userID"];
+    $firstName = $request["request"]["firstName"];
+    $lastName = $request["request"]["lastName"];
+
+    $checkin_status = checkin_user($userID, $eventID);
+    $response["checkin_status"] = $checkin_status;
   }
 
   // Check in via form submission
@@ -46,7 +54,7 @@ if (is_array($request)) {
     $response["formJsonString"] = event_form_json($eventID);
   }
 
-  // Fetch all events managed by current user (userId from iOS)
+  // Fetch all events managed by given user
   else if ($requestType == "events") {
     $response["status"] = "ok";
 

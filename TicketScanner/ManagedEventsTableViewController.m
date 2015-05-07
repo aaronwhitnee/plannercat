@@ -23,6 +23,8 @@ enum { EVENT_CELL_HEIGHT = 100, GAP_BTWN_VIEWS = 5, IMAGE_HEIGHT = 0, IMAGE_WIDT
 - (void)viewDidLoad {
     [super viewDidLoad];
     
+    self.navigationController.navigationBar.topItem.title = @"";
+    
     [self.tableView registerClass:[UITableViewCell class] forCellReuseIdentifier:EventCellID];
     
     [self.view addSubview:self.activityIndicator];
@@ -72,7 +74,7 @@ enum { EVENT_CELL_HEIGHT = 100, GAP_BTWN_VIEWS = 5, IMAGE_HEIGHT = 0, IMAGE_WIDT
 }
 
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section {
-    NSLog(@"%s: Number of rows in Table View: %lu", __func__, [self.eventsDataSource numberOfEvents]);
+    NSLog(@"%s: Number of rows in Table View: %d", __func__, (int)[self.eventsDataSource numberOfEvents]);
     return [self.eventsDataSource numberOfEvents];
 }
 
@@ -87,13 +89,14 @@ enum { EVENT_CELL_HEIGHT = 100, GAP_BTWN_VIEWS = 5, IMAGE_HEIGHT = 0, IMAGE_WIDT
     return EVENT_CELL_HEIGHT;
 }
 
+// Takes user to view guests and start checking them into their event
 - (void) tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath {
     Event *selectedEvent = [self.eventsDataSource eventAtIndex:[indexPath row]];
     CheckinTabBarController *checkinController = [[CheckinTabBarController alloc] initWithEvent:selectedEvent];
     [self.navigationController pushViewController:checkinController animated:YES];
 }
 
-- (UITableViewCell *) eventViewForIndex:(NSInteger)rowIndex withTableViewCell:(UITableViewCell *)cell {
+- (UITableViewCell *) eventViewForIndex:(NSInteger)rowIndex withTableViewCell:(UITableViewCell *) cell {
     enum {MAIN_VIEW_TAG = 100, EVENT_LABEL_TAG = 200};
     
     Event *event = [self.eventsDataSource eventAtIndex:(int)rowIndex];
@@ -131,49 +134,5 @@ enum { EVENT_CELL_HEIGHT = 100, GAP_BTWN_VIEWS = 5, IMAGE_HEIGHT = 0, IMAGE_WIDT
     
     return cell;
 }
-
-/*
-// Override to support conditional editing of the table view.
-- (BOOL)tableView:(UITableView *)tableView canEditRowAtIndexPath:(NSIndexPath *)indexPath {
-    // Return NO if you do not want the specified item to be editable.
-    return YES;
-}
-*/
-
-/*
-// Override to support editing the table view.
-- (void)tableView:(UITableView *)tableView commitEditingStyle:(UITableViewCellEditingStyle)editingStyle forRowAtIndexPath:(NSIndexPath *)indexPath {
-    if (editingStyle == UITableViewCellEditingStyleDelete) {
-        // Delete the row from the data source
-        [tableView deleteRowsAtIndexPaths:@[indexPath] withRowAnimation:UITableViewRowAnimationFade];
-    } else if (editingStyle == UITableViewCellEditingStyleInsert) {
-        // Create a new instance of the appropriate class, insert it into the array, and add a new row to the table view
-    }   
-}
-*/
-
-/*
-// Override to support rearranging the table view.
-- (void)tableView:(UITableView *)tableView moveRowAtIndexPath:(NSIndexPath *)fromIndexPath toIndexPath:(NSIndexPath *)toIndexPath {
-}
-*/
-
-/*
-// Override to support conditional rearranging of the table view.
-- (BOOL)tableView:(UITableView *)tableView canMoveRowAtIndexPath:(NSIndexPath *)indexPath {
-    // Return NO if you do not want the item to be re-orderable.
-    return YES;
-}
-*/
-
-/*
-#pragma mark - Navigation
-
-// In a storyboard-based application, you will often want to do a little preparation before navigation
-- (void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender {
-    // Get the new view controller using [segue destinationViewController].
-    // Pass the selected object to the new view controller.
-}
-*/
 
 @end

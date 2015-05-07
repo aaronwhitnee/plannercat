@@ -11,7 +11,7 @@
 #import "MainMenuTableViewController.h"
 #import "ActivityIndicatorView.h"
 
-@interface LoginViewController : UIViewController<ConnectionFinishedDelegate>
+@interface LoginViewController : UIViewController<ConnectionFinishedDelegate, UITextFieldDelegate>
 
 
 

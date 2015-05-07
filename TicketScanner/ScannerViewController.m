@@ -7,7 +7,6 @@
 //
 
 #import "ScannerViewController.h"
-#include "ActivityIndicatorView.h"
 
 @interface ScannerViewController ()
 
@@ -26,22 +25,35 @@
 - (void)viewDidLoad {
     [super viewDidLoad];
     
-    CGRect window = [[UIScreen mainScreen] applicationFrame];
+    CGRect window = [[UIScreen mainScreen] bounds];
     
-    self.view.backgroundColor = [UIColor colorWithRed:0.3 green:0.3 blue:0.3 alpha:1.0];
+    self.navigationController.navigationBar.translucent = NO;
+    self.navigationController.navigationBar.tintColor = [UIColor colorWithRed:0 green:100.0/255.0 blue:180.0/255.0 alpha:1.0];
     
-//    CGRect scannerViewFrame = CGRectMake(0, 20, window.size.width, window.size.width);
-    CGRect scannerViewFrame = window;
-    self.scannerView = [[QRCodeCaptureView alloc] initWithFrame:scannerViewFrame message:@"Tap SCAN Button"];
+    CGSize tabBarSize = [[[self tabBarController] tabBar] bounds].size;
+    CGFloat scannerViewHeight = window.size.height - tabBarSize.height;
+    CGFloat scannerViewWidth = window.size.width;
+    CGRect scannerViewFrame = CGRectMake(0, 0, scannerViewWidth, scannerViewHeight);
+    self.scannerView = [[QRCodeCaptureView alloc] initVideoViewWithFrame:scannerViewFrame];
     self.scannerView.delegate = self;
     [self.view addSubview:self.scannerView];
     
-    self.startStopButton.center = CGPointMake(window.size.width / 2, window.size.height - 120);
-    [self.startStopButton addTarget:self action:@selector(startStopReading) forControlEvents:UIControlEventTouchUpInside];
-    [self.view addSubview:self.startStopButton];
+//    self.startStopButton.center = CGPointMake(window.size.width / 2, window.size.height - 120);
+//    [self.startStopButton addTarget:self action:@selector(startStopReading) forControlEvents:UIControlEventTouchUpInside];
+//    [self.view addSubview:self.startStopButton];
     
     [self.view addSubview:self.firstNameLabel];
     [self.view addSubview:self.lastNameLabel];
+}
+
+-(void) viewDidAppear:(BOOL)animated {
+    [super viewDidAppear:animated];
+    [self.scannerView startReading];
+}
+
+-(void) viewDidDisappear:(BOOL)animated {
+    [super viewDidDisappear:animated];
+    [self.scannerView stopReading];
 }
 
 - (void)didReceiveMemoryWarning {
@@ -57,24 +69,24 @@
     return _webServer;
 }
 
--(UIButton *) startStopButton {
-    if (_startStopButton) {
-        return _startStopButton;
-    }
-    CGRect buttonFrame = CGRectMake(0, 0, 100, 100);
-    _startStopButton = [[UIButton alloc] initWithFrame:buttonFrame];
-    [_startStopButton setTitle:@"SCAN" forState:UIControlStateNormal];
-    _startStopButton.titleLabel.textColor = [UIColor whiteColor];
-    _startStopButton.titleLabel.textAlignment = NSTextAlignmentCenter;
-    _startStopButton.titleLabel.font = [UIFont systemFontOfSize:14 weight:1.5];
-    _startStopButton.backgroundColor = [UIColor colorWithRed:0 green:100.0/255.0 blue:180.0/255.0 alpha:1.0];
-    _startStopButton.clipsToBounds = YES;
-    _startStopButton.layer.cornerRadius = buttonFrame.size.width / 2;
-    _startStopButton.layer.borderWidth = buttonFrame.size.width * 0.03;
-    _startStopButton.layer.borderColor = [UIColor colorWithRed:0 green:136.0/255.0 blue:247.0/255.0 alpha:1.0].CGColor;
-    
-    return _startStopButton;
-}
+//-(UIButton *) startStopButton {
+//    if (_startStopButton) {
+//        return _startStopButton;
+//    }
+//    CGRect buttonFrame = CGRectMake(0, 0, 100, 100);
+//    _startStopButton = [[UIButton alloc] initWithFrame:buttonFrame];
+//    [_startStopButton setTitle:@"SCAN" forState:UIControlStateNormal];
+//    _startStopButton.titleLabel.textColor = [UIColor whiteColor];
+//    _startStopButton.titleLabel.textAlignment = NSTextAlignmentCenter;
+//    _startStopButton.titleLabel.font = [UIFont systemFontOfSize:14 weight:1.5];
+//    _startStopButton.backgroundColor = [UIColor colorWithRed:0 green:100.0/255.0 blue:180.0/255.0 alpha:1.0];
+//    _startStopButton.clipsToBounds = YES;
+//    _startStopButton.layer.cornerRadius = buttonFrame.size.width / 2;
+//    _startStopButton.layer.borderWidth = buttonFrame.size.width * 0.03;
+//    _startStopButton.layer.borderColor = [UIColor colorWithRed:0 green:136.0/255.0 blue:247.0/255.0 alpha:1.0].CGColor;
+//    
+//    return _startStopButton;
+//}
 
 -(UILabel *) firstNameLabel {
     if (_firstNameLabel) {
@@ -102,37 +114,36 @@
     return _lastNameLabel;
 }
 
--(void) startStopReading {
-    self.webServer.delegate = self;
-
-    if (!self.scannerView.isReading) {
-        if ([self.scannerView startReading]) {
-            self.startStopButton.alpha = 0.2;
-            self.startStopButton.userInteractionEnabled = NO;
-        }
-    }
-    else {
-        [self.scannerView stopReading];
-        self.startStopButton.alpha = 1.0;
-        self.startStopButton.userInteractionEnabled = YES;
-    }
-}
+//-(void) startStopReading {
+//    if (!self.scannerView.isReading) {
+//        if ([self.scannerView startReading]) {
+////            self.startStopButton.alpha = 0.2;
+//            self.startStopButton.userInteractionEnabled = NO;
+//        }
+//    }
+//    else {
+//        [self.scannerView stopReading];
+////        self.startStopButton.alpha = 1.0;
+//        self.startStopButton.userInteractionEnabled = YES;
+//    }
+//}
 
 -(void) handleServerResponse:(NSDictionary *)response {
-    // notify user if ticket is valid/invalid,
+    // notify user if ticket is valid/invalid
     [self playWhistleSound];
-    [self startStopReading];
     NSLog(@"Scanned data uploaded to database successfully.");
+    
+    [self.scannerView startReading];
 }
 
 -(void) acceptScannedData:(NSArray *)metadataObjects {
     // TODO: play "beep" sound for valid/successful scan here...
+    [self.scannerView stopReading];
     
-    // Parse the scanned metadata string, split it into separate objects/strings
     NSDictionary *ticketData = [self generateJSONWithScannedData:metadataObjects];
     
     if (!ticketData) {
-        // alert user of invalid ticket
+        // TODO: alert user of invalid ticket
         return;
     }
     
@@ -140,13 +151,13 @@
 }
 
 -(NSDictionary *) generateJSONWithScannedData:(NSArray *)metadata {
-    // TODO: convert json string to dictionary
     if ([metadata count] != 1) {
         return nil;
     }
     
     NSError *jsonError;
-    NSString *jsonString = metadata[0];
+    NSString *jsonString = [metadata objectAtIndex:0];
+    NSLog(@"Scanned JSON from ticket: %@", jsonString);
     NSData *rawData = [jsonString dataUsingEncoding:NSUTF8StringEncoding];
     NSDictionary *jsonData = [NSJSONSerialization JSONObjectWithData:rawData options:kNilOptions error:&jsonError];
     
@@ -159,11 +170,9 @@
 
 - (AVAudioPlayer *)whistleSound {
     if (!_whistleSound) {
-        // Prepare audio file to play
         NSString *audioFilePath = [[[NSBundle mainBundle] resourcePath] stringByAppendingPathComponent:@"whistle.wav"];
         NSURL *whistleUrl = [NSURL fileURLWithPath:audioFilePath];
         NSError *error;
-        
         _whistleSound = [[AVAudioPlayer alloc] initWithContentsOfURL:whistleUrl error:&error];
         NSLog(@"%@", error);
     }

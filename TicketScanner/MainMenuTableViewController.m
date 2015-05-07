@@ -16,7 +16,7 @@
 @end
 
 static NSString *CellID = @"menuItem";
-enum {MENU_ITEM_HEIGHT = 90};
+enum {MENU_ITEM_HEIGHT = 90, MENU_FONT_SIZE = 20};
 
 @implementation MainMenuTableViewController
 
@@ -47,7 +47,6 @@ enum {MENU_ITEM_HEIGHT = 90};
 }
 
 - (void) didTapSettingsBarButton:(UIBarButtonItem *)sender {
-    NSLog(@"tapped settings button");
     SettingsTableViewController *settingsViewController = [[SettingsTableViewController alloc] init];
     [self.navigationController pushViewController:settingsViewController animated: YES];
 }

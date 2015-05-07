@@ -170,12 +170,12 @@
 			children = (
 				0C855A9D1AB519CB0058D450 /* CheckinTabBarController.h */,
 				0C855A9E1AB519CB0058D450 /* CheckinTabBarController.m */,
+				0C93F9E01AFA08D500EC3735 /* RSVPListTableViewController.h */,
+				0C93F9E11AFA08D500EC3735 /* RSVPListTableViewController.m */,
 				0C9874B61AA04DB9006A2F9A /* ScannerViewController.h */,
 				0C9874B71AA04DB9006A2F9A /* ScannerViewController.m */,
 				0C9874B91AA04DB9006A2F9A /* ManualCheckinFormViewController.h */,
 				0C9874BA1AA04DB9006A2F9A /* ManualCheckinViewController.m */,
-				0C93F9E01AFA08D500EC3735 /* RSVPListTableViewController.h */,
-				0C93F9E11AFA08D500EC3735 /* RSVPListTableViewController.m */,
 			);
 			name = "Checking In";
 			sourceTree = "<group>";

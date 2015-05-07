@@ -21,8 +21,7 @@ function login($user_info) {
 	$userID = $result['id'];
 
 	//invalid user
-	if (!$result){
-		// echo('<center><span style="color:red;"><b>Invalid User ID</b></span></center>');
+	if (!$result) {
 		mysqli_close($con);
 		return false;
 	}
@@ -39,7 +38,6 @@ function login($user_info) {
 	}
 
 	//invalid password
-	// echo('<center><span style="color:red;"><b>Invalid Password</b></span></center>');
 	mysqli_close($con);
 	return false;
 }
@@ -47,6 +45,7 @@ function login($user_info) {
 /*************
 	Helper function that returns
 	a user's unique ID using their email address
+	(used during iOS login)
 *************/
 function get_user_id($email) {
 	//getting user from database
@@ -55,6 +54,7 @@ function get_user_id($email) {
 	$result = mysqli_fetch_array($query);
 	$userID = $result['id'];
 
+	mysqli_close($db);
 	return $userID;
 }
 
@@ -96,6 +96,7 @@ function event_form_json($eventID) {
 
 	$JSON .= " ]";
 
+	mysqli_close($db);
 	return $JSON;
 }
 
@@ -116,9 +117,75 @@ function get_user_events($userID) {
 		$events[] = $row;
 	}
 
+	mysqli_close($db);
+
 	$JSON = json_encode($events);
 	return $JSON;
 }
 
+/*************
+	Generates a JSON string for
+	all guests registered for a given event
+*************/
+function get_event_guests($eventID) {
+	$db = sql_connect();
+
+	$query = mysqli_query($db,
+		"SELECT * FROM event AS E
+		JOIN events_managers AS EM ON ( EM.event_id = E.id )
+		WHERE EM.user_id = $userID");
+
+	$guests = array();
+	while ($row = mysqli_fetch_assoc($query)) {
+		$guests[] = $row;
+	}
+
+	mysqli_close($db);
+
+	$JSON = json_encode($guests);
+	return $JSON;
+}
+
+/*************
+	Checks if a given user has registered
+	for a given event by checking if a receipt exists.
+	If exists, user is checked in.
+	Returns a string reporting checkin status.
+*************/
+function checkin_user($userID, $eventID) {
+	$db = sql_connect();
+
+	$query = mysqli_query($db,
+		"SELECT * FROM receipt AS R
+		WHERE R.user_id = $userID
+		AND R.event_id = $eventID");
+
+	$receipt = array();
+	while ($row = mysqli_fetch_assoc($query)) {
+		$receipt[] = $row;
+	}
+
+	if (count($receipt) < 1) {
+		// user has not registered for this event
+		mysqli_close($db);
+		return "no_receipt";
+	}
+	else if (count($receipt) > 1) {
+		// user has registered multiple times for this event
+		mysqli_close($db);
+		return "duplicate";
+	}
+	else if ($receipt["checkin"] == 1) {
+		mysqli_close($db);
+		return "already_registered";
+	}
+	else {
+		$receiptID = $receipt["id"];
+		$query = mysqli_query($db, "UPDATE receipt SET checkin = '1' WHERE receipt.id = $receiptID");
+		mysqli_close($db);
+	}
+
+	return "ok";
+}
 
 ?>

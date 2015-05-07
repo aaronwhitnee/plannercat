@@ -14,12 +14,11 @@
 @interface QRCodeCaptureView : UIView <AVCaptureMetadataOutputObjectsDelegate>
 
 @property(nonatomic) BOOL isReading;
-@property(nonatomic) UILabel *scannerMessageLabel;
 @property(nonatomic) AVCaptureSession *videoCaptureSession;
 @property(nonatomic) AVCaptureVideoPreviewLayer *videoPreviewLayer;
 @property(nonatomic, weak) id<ScannedDataReadyForUseDelegate> delegate;
 
--(instancetype) initWithFrame:(CGRect)frame message:(NSString *)message;
+-(instancetype) initVideoViewWithFrame:(CGRect)frame;
 -(BOOL) startReading;
 -(void) stopReading;
 

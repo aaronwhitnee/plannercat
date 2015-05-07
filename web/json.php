@@ -34,4 +34,6 @@ while ($row=mysqli_fetch_array($query1)){
 }
 
 $JSON .= " ]";
+
+echo $JSON;
 ?>
