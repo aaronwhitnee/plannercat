@@ -9,15 +9,16 @@ function sql_connect(){return mysqli_connect('bpwebdesign.com', 'planner_cat', '
 	login function
 	Returns true if sucessful login
 *************/
-function login($post){
+function login($user_info) {
 	//grabbing relavent post info
-	$id = $post['id']; $pw = $post['pw'];
+	$email = $user_info['email'];
+	$pw = $user_info['pw'];
 
 	//getting user from database
 	$con = sql_connect();
-	$query = mysqli_query($con, "SELECT * FROM user WHERE id = '$id';");
+	$query = mysqli_query($con, "SELECT * FROM user WHERE email = '$email';");
 	$result = mysqli_fetch_array($query);
-	$usr = $result['id'];
+	$userID = $result['id'];
 
 	//invalid user
 	if (!$result){
@@ -29,7 +30,7 @@ function login($post){
 	//successful login
 	else if (strcmp(md5($pw),trim($result['password']))==0) {
 		session_regenerate_id();
-			$_SESSION['username']=$usr;
+			$_SESSION['userID'] = $userID;
 			if ($result['admin'] == 1)
 				$_SESSION['admin'] = true;
 		session_write_close();
@@ -41,6 +42,20 @@ function login($post){
 	// echo('<center><span style="color:red;"><b>Invalid Password</b></span></center>');
 	mysqli_close($con);
 	return false;
+}
+
+/*************
+	Helper function that returns
+	a user's unique ID using their email address
+*************/
+function get_user_id($email) {
+	//getting user from database
+	$db = sql_connect();
+	$query = mysqli_query($db, "SELECT * FROM user WHERE email = '$email'");
+	$result = mysqli_fetch_array($query);
+	$userID = $result['id'];
+
+	return $userID;
 }
 
 /*************
@@ -83,4 +98,27 @@ function event_form_json($eventID) {
 
 	return $JSON;
 }
+
+/*************
+	Generates a JSON string for
+	all events managed by a given user
+*************/
+function get_user_events($userID) {
+	$db = sql_connect();
+
+	$query = mysqli_query($db,
+		"SELECT * FROM event AS E
+		JOIN events_managers AS EM ON ( EM.event_id = E.id )
+		WHERE EM.user_id = $userID");
+
+	$events = array();
+	while ($row = mysqli_fetch_assoc($query)) {
+		$events[] = $row;
+	}
+
+	$JSON = json_encode($events);
+	return $JSON;
+}
+
+
 ?>

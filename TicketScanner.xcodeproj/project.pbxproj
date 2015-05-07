@@ -235,10 +235,10 @@
 		0C93F9DE1AF9AD7600EC3735 /* Data Sources */ = {
 			isa = PBXGroup;
 			children = (
-				0C93F9DB1AF9AD6E00EC3735 /* TicketsDataSource.h */,
-				0C93F9DC1AF9AD6E00EC3735 /* TicketsDataSource.m */,
 				0C93F9D81AF9AD5A00EC3735 /* EventsDataSource.h */,
 				0C93F9D91AF9AD5A00EC3735 /* EventsDataSource.m */,
+				0C93F9DB1AF9AD6E00EC3735 /* TicketsDataSource.h */,
+				0C93F9DC1AF9AD6E00EC3735 /* TicketsDataSource.m */,
 				0C1128091AB11D6C00FD8C61 /* ManualCheckinForm.h */,
 				0C11280A1AB11D6C00FD8C61 /* ManualCheckinForm.m */,
 				0C93F9DF1AF9D2C800EC3735 /* DataSourceReadyForUseDelegate.h */,

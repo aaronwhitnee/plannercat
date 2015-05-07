@@ -1,4 +1,4 @@
-<?php 
+<?php
 	include "includes/header.php";
 	include "includes/functions.inc.php";
 	if (!isset($_SESSION['admin']))
@@ -32,7 +32,7 @@
 		<option>Radio Button</option>
 	</select>
 	<div id="options" style="display:none;">
-		Number of options: 
+		Number of options:
 		<input type="number" id="numOptions" style="width:40px;">
 	</div>
 	<button type='button' id='addItem'>Add New Item</button>
@@ -43,7 +43,7 @@
 	<div id="radioFields">
 	</div>
 
-	<div id="dropFields"> 
+	<div id="dropFields">
 	</div>
 
 	<!-- END CUSTOM FIELDS -->
@@ -67,7 +67,7 @@
 			var titleNm = "textNew" + txtLength.toString();
 			$("#textFields").append("<br>Add New Field:<br>\
 		 		Field Name: <input type='text' name='" + titleNm + "'> <br>");
-		  $("#textCount").val(txtLength);				 
+		  $("#textCount").val(txtLength);
 		}
 		else if ($("#inType option:selected").text() == "Drop Down"){
 			dropLength++;
@@ -79,7 +79,7 @@
 			for (var i=0; i<document.getElementById('numOptions').value; i++) {
 				$("#dropFields").append("Option Value: <input type='text' name='" + titleNm + "optionNum" + i.toString() + "'> <br>");
 			};
-		  $("#dropCount").val(dropLength);				 
+		  $("#dropCount").val(dropLength);
 		}
 		else if ($("#inType option:selected").text() == "Radio Button"){
 			radioLength++;
@@ -91,7 +91,7 @@
 			for (var i=0; i<document.getElementById('numOptions').value; i++) {
 				$("#radioFields").append("Option Value: <input type='text' name='" + titleNm + "optionNum" + i.toString() + "'> <br>");
 			};
-		  $("#radioCount").val(radioLength);				 
+		  $("#radioCount").val(radioLength);
 		}
   });
 
@@ -113,27 +113,30 @@
 
 		//insert meta data for event
 		$title=$_POST['name']; $time=$_POST['time'];$venue=$_POST['venue'];$desc=$_POST['desc'];
-		mysqli_query($con, "INSERT INTO event(event_title, start_date, venue, description) 
+		mysqli_query($con, "INSERT INTO event(event_title, start_date, venue, description)
 			VALUES ('$title', '$time', '$venue', '$desc');");
 		$query = mysqli_query($con, "SELECT id FROM event WHERE event_title='$title' AND start_date='$time';");
 		$result = mysqli_fetch_array($query);
 		$eID = $result['id'];
+		$userID = $_SESSION['userID'];
+		mysqli_query($con, "INSERT INTO events_managers(event_id, user_id)
+			VALUES ('$eID', '$userID')");
 
 		/* START DYNAMIC FIELD INSERTION */
 		//text fields
 		for ($i=0;$i<intval($_POST['textCount']);$i++){
 			$question = $_POST["textNew" . strval($i + 1)];
-			mysqli_query($con, "INSERT INTO form_field(question, event_id, field_type) 
+			mysqli_query($con, "INSERT INTO form_field(question, event_id, field_type)
 				VALUES ('$question', $eID, 'text');");
 		}
 
 		//radio buttons
 		for ($i=0;$i<intval($_POST['radioCount']);$i++){
 			$question = $_POST["radioNew" . strval($i + 1)];
-			mysqli_query($con, "INSERT INTO form_field(question, event_id, field_type) 
+			mysqli_query($con, "INSERT INTO form_field(question, event_id, field_type)
 				VALUES ('$question', $eID, 'radio');");
 
-			//get ID for radio 
+			//get ID for radio
 			$query = mysqli_query($con, "SELECT id FROM form_field WHERE question='$question' AND event_id=$eID;");
 			$result = mysqli_fetch_array($query);
 			$fieldID = $result['id'];
@@ -148,10 +151,10 @@
 		//drop down
 		for ($i=0;$i<intval($_POST['dropCount']);$i++){
 			$question = $_POST["dropNew" . strval($i + 1)];
-			mysqli_query($con, "INSERT INTO form_field(question, event_id, field_type) 
+			mysqli_query($con, "INSERT INTO form_field(question, event_id, field_type)
 				VALUES ('$question', $eID, 'drop');");
 
-			//get ID for drop 
+			//get ID for drop
 			$query = mysqli_query($con, "SELECT id FROM form_field WHERE question='$question' AND event_id=$eID;");
 			$result = mysqli_fetch_array($query);
 			$fieldID = $result['id'];

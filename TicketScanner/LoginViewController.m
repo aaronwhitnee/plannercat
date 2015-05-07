@@ -55,31 +55,36 @@ static float FIELD_HEIGHT = 60;
     
     // Initialize data for server request
     NSString *reqType = @"login";
-    NSDictionary *userInfo = [NSDictionary dictionaryWithObjects:@[@"1", @"runnitt"]
-                                                         forKeys:@[@"userID", @"password"]];
+    NSDictionary *userInfo = [NSDictionary dictionaryWithObjects:@[@"admin@plannercat.com", @"runnitt"]
+                                                         forKeys:@[@"email", @"password"]];
     
     // Post login information to server
     [self.webServer performServerRequestType:reqType withData:userInfo];
 }
 
-// Required ConnectionFinishedDelegate protocol method - checks for valid login
+#pragma mark - ConnectionFinishedDelegate protocol method
+
+// Inspects response for valid login
 -(void) handleServerResponse:(NSDictionary *)response {
     self.submitButton.alpha = 1.0;
 
-    if ([[response valueForKey:@"status"] isEqualToString:@"error"]) {
-        NSLog(@"Server error: cannot process request.");
-    }
     // Take user to main menu on successful login
-    else if ([[response valueForKey:@"valid"] integerValue] == 1) {
+    if ([[response valueForKey:@"valid"] integerValue] == 1 &&
+        [[response valueForKey:@"status"] isEqualToString:@"ok"]) {
         NSLog(@"Login successful!");
-        NSInteger userId = [[response valueForKey:@"id"] integerValue];
+        NSInteger userId = [[response valueForKey:@"userID"] integerValue];
         NSString *userEmail = [response valueForKey:@"email"];
-        [[NSUserDefaults standardUserDefaults] setValue:@(userId) forKey:@"userId"];
-        [[NSUserDefaults standardUserDefaults] setValue:userEmail forKey:@"userEmail"];
+        [[NSUserDefaults standardUserDefaults] setValue:@(userId) forKey:@"appUserID"];
+        [[NSUserDefaults standardUserDefaults] setValue:userEmail forKey:@"appUserEmail"];
         
         [self.activityIndicator stopAnimating];
         MainMenuTableViewController *mainMenu = [[MainMenuTableViewController alloc] init];
         [self.navigationController pushViewController:mainMenu animated:YES];
+    }
+    // Valid login, but with server error
+    else if ([[response valueForKey:@"valid"] integerValue] == 1 &&
+             [[response valueForKey:@"status"] isEqualToString:@"error"]) {
+        NSLog(@"Error logging in.");
     }
     else {
         NSLog(@"Invalid login.");

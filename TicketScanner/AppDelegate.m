@@ -25,10 +25,7 @@
 //    ScannerViewController *svc = [[ScannerViewController alloc] init];
 //    ManualCheckinFormViewController *mvc = [[ManualCheckinFormViewController alloc] init];
 //    
-//    UIImage *img1 = [UIImage imageNamed:@"first"];
-//    UITabBarItem *firstTab = [[UITabBarItem alloc] initWithTitle:@"Scan Ticket" image:img1 selectedImage:img1];
-//    svc.tabBarItem = firstTab;
-//    
+//
 //    UIImage *img2 = [UIImage imageNamed:@"second"];
 //    UITabBarItem *secondTab = [[UITabBarItem alloc] initWithTitle:@"Manual Check-In" image:img2 selectedImage:img2];
 //    mvc.tabBarItem = secondTab;
@@ -43,7 +40,7 @@
     UINavigationController *mainNavigation = [[UINavigationController alloc] initWithRootViewController:loginScreen];
     
     // Display main menu if user is already logged in
-    if ([[NSUserDefaults standardUserDefaults] valueForKey:@"userId"]) {
+    if ([[NSUserDefaults standardUserDefaults] valueForKey:@"appUserID"]) {
         MainMenuTableViewController *mainMenu = [[MainMenuTableViewController alloc] init];
         [mainNavigation pushViewController:mainMenu animated:NO];
     }

@@ -83,7 +83,7 @@
         if (self.jsonResponse == nil) {
             NSLog(@"No data has been received.");
         }
-        [self.delegate handleServerResponse:self.jsonResponse];
+        [self.delegate performSelector:@selector(handleServerResponse:) withObject:self.jsonResponse];
     }
 }
 

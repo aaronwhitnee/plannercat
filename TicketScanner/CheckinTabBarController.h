@@ -7,10 +7,13 @@
 //
 
 #import <UIKit/UIKit.h>
+#import "Event.h"
+#import "RSVPListTableViewController.h"
+#import "ScannerViewController.h"
+#import "ManualCheckinFormViewController.h"
 
 @interface CheckinTabBarController : UITabBarController
 
-// TODO: this number is set before the view controller is pushed onto the navigation stack
-@property(nonatomic) NSInteger eventId;
+-(instancetype) initWithEvent:(Event *)event;
 
 @end

@@ -7,7 +7,10 @@
 //
 
 #import <UIKit/UIKit.h>
+#import "EventsDataSource.h"
+#import "ActivityIndicatorView.h"
+#import "CheckinTabBarController.h"
 
-@interface ManagedEventsTableViewController : UITableViewController
+@interface ManagedEventsTableViewController : UITableViewController<DataSourceReadyForUseDelegate,UITableViewDelegate,UITableViewDataSource>
 
 @end

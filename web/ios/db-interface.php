@@ -17,21 +17,24 @@ $response = array();
 // JSON response with fetched DB data
 if (is_array($request)) {
   $requestType = $request["requestType"];
-  $response["responseType"] = $requestType;
 
   // Logging in
   if ($requestType == "login") {
-    $user_info = array(
-      "id" => $request["request"]["userID"],
-      "pw" => $request["request"]["password"]
-    );
-    $response["valid"] = login($user_info) ? 1 : 0;
     $response["status"] = "ok";
+    $email = $request["request"]["email"];
+    $password = $request["request"]["password"];
+
+    $user_info = array(
+      "email" => $email,
+      "pw" => $password
+    );
+
+    $response["valid"] = login($user_info) ? 1 : 0;
+    $response["userID"] = get_user_ID($email);
   }
 
   // Check in via scanning a QR Code ticket
   else if ($requestType == "checkinTicket") {
-    // check in via ticket scan
     $response["status"] = "ok";
   }
 
@@ -46,6 +49,9 @@ if (is_array($request)) {
   // Fetch all events managed by current user (userId from iOS)
   else if ($requestType == "events") {
     $response["status"] = "ok";
+
+    $userID = $request["request"]["userID"];
+    $response["eventsJsonString"] = get_user_events($userID);
   }
 
   // Fetch all ticket receipts owned by current user

@@ -8,7 +8,19 @@
 
 #import <Foundation/Foundation.h>
 #import "DataSourceReadyForUseDelegate.h"
+#import "ServerCommunicator.h"
+#import "Event.h"
 
-@interface EventsDataSource : NSObject<DataSourceReadyForUseDelegate>
+@protocol DataSourceReadyForUseDelegate;
+
+@interface EventsDataSource : NSObject<ConnectionFinishedDelegate>
+
+@property(nonatomic, strong) id<DataSourceReadyForUseDelegate> delegate;
+@property(nonatomic) BOOL eventsDataReadyForUse;
+
+-(instancetype) initWithEventsManagedByUser:(NSInteger)userID;
+-(NSInteger) numberOfEvents;
+-(NSMutableArray *) getAllEvents;
+-(Event *) eventAtIndex:(NSInteger)index;
 
 @end
