@@ -22,7 +22,7 @@
 
 @end
 
-enum {FIELD_WIDTH = 250, FIELD_HEIGHT = 60, BUTTON_FONT_SIZE = 16};
+enum {FIELD_WIDTH = 250, FIELD_HEIGHT = 60, BUTTON_FONT_SIZE = 16, TITLE_FONT_SIZE = 50};
 
 @implementation LoginViewController
 
@@ -272,7 +272,7 @@ enum {FIELD_WIDTH = 250, FIELD_HEIGHT = 60, BUTTON_FONT_SIZE = 16};
     CGRect visibleRect = self.view.frame;
     visibleRect.size.height -= keyboardSize.height;
     if (!CGRectContainsPoint(visibleRect, buttonOrigin)){
-        CGPoint scrollPoint = CGPointMake(0.0, buttonOrigin.y - visibleRect.size.height + buttonHeight);
+        CGPoint scrollPoint = CGPointMake(0.0, buttonOrigin.y - visibleRect.size.height + buttonHeight + 10);
         [self.scrollView setContentOffset:scrollPoint animated:YES];
     }
 }

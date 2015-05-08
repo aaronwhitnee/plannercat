@@ -10,7 +10,7 @@
 #import "ServerCommunicator.h"
 #import "QRCodeCaptureView.h"
 
-@interface ScannerViewController : UIViewController <ConnectionFinishedDelegate, ScannedDataReadyForUseDelegate>
+@interface ScannerViewController : UIViewController <ConnectionFinishedDelegate, AVCaptureMetadataOutputObjectsDelegate>
 
 
 @end

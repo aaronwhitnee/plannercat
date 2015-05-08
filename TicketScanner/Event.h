@@ -16,7 +16,6 @@
 -(void) addValue:(NSString *)attrVal forAttribute:(NSString *)attrName;
 -(id) getValueForAttribute:(NSString *)attribute;
 
--(NSAttributedString *)titleForListEntry;
 -(NSAttributedString *)descriptionForListEntry;
 
 -(NSInteger) eventID;

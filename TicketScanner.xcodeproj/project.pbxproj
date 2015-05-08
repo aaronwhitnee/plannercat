@@ -8,13 +8,16 @@
 
 /* Begin PBXBuildFile section */
 		0C1128081AB11B3700FD8C61 /* FXForms.m in Sources */ = {isa = PBXBuildFile; fileRef = 0C1128071AB11B3700FD8C61 /* FXForms.m */; };
-		0C11280B1AB11D6C00FD8C61 /* ManualCheckinForm.m in Sources */ = {isa = PBXBuildFile; fileRef = 0C11280A1AB11D6C00FD8C61 /* ManualCheckinForm.m */; };
+		0C11280B1AB11D6C00FD8C61 /* RegistrationForm.m in Sources */ = {isa = PBXBuildFile; fileRef = 0C11280A1AB11D6C00FD8C61 /* RegistrationForm.m */; };
 		0C1741D11AF8756A00C9269A /* MainMenuTableViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 0C1741D01AF8756A00C9269A /* MainMenuTableViewController.m */; };
 		0C1741D41AF887F800C9269A /* ManagedEventsTableViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 0C1741D31AF887F800C9269A /* ManagedEventsTableViewController.m */; };
 		0C1741D71AF88ACB00C9269A /* TicketsTableViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 0C1741D61AF88ACB00C9269A /* TicketsTableViewController.m */; };
 		0C1741DB1AF8972D00C9269A /* SettingsTableViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 0C1741DA1AF8972D00C9269A /* SettingsTableViewController.m */; };
 		0C265C021AF6B24A00508A26 /* LoginViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 0C265C011AF6B24A00508A26 /* LoginViewController.m */; };
 		0C34386D1AA93E8B002E1ED5 /* ServerCommunicator.m in Sources */ = {isa = PBXBuildFile; fileRef = 0C34386C1AA93E8B002E1ED5 /* ServerCommunicator.m */; };
+		0C4CEBFA1AFC25D70000F2E3 /* GuestsDataSource.m in Sources */ = {isa = PBXBuildFile; fileRef = 0C4CEBF91AFC25D70000F2E3 /* GuestsDataSource.m */; };
+		0C4CEBFD1AFC279B0000F2E3 /* Guest.m in Sources */ = {isa = PBXBuildFile; fileRef = 0C4CEBFC1AFC279B0000F2E3 /* Guest.m */; };
+		0C4CEC031AFC9F3D0000F2E3 /* FormField.m in Sources */ = {isa = PBXBuildFile; fileRef = 0C4CEC021AFC9F3D0000F2E3 /* FormField.m */; };
 		0C855A9F1AB519CB0058D450 /* CheckinTabBarController.m in Sources */ = {isa = PBXBuildFile; fileRef = 0C855A9E1AB519CB0058D450 /* CheckinTabBarController.m */; };
 		0C855AA11AB56B100058D450 /* whistle.wav in Resources */ = {isa = PBXBuildFile; fileRef = 0C855AA01AB56B100058D450 /* whistle.wav */; };
 		0C88618D1ABB9C86002954F4 /* AudioToolbox.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 0C88618C1ABB9C86002954F4 /* AudioToolbox.framework */; };
@@ -35,7 +38,7 @@
 		0C9874B21AA04DB9006A2F9A /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 0C9874B11AA04DB9006A2F9A /* main.m */; };
 		0C9874B51AA04DB9006A2F9A /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 0C9874B41AA04DB9006A2F9A /* AppDelegate.m */; };
 		0C9874B81AA04DB9006A2F9A /* ScannerViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 0C9874B71AA04DB9006A2F9A /* ScannerViewController.m */; };
-		0C9874BB1AA04DB9006A2F9A /* ManualCheckinViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 0C9874BA1AA04DB9006A2F9A /* ManualCheckinViewController.m */; };
+		0C9874BB1AA04DB9006A2F9A /* RegistrationFormViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 0C9874BA1AA04DB9006A2F9A /* RegistrationFormViewController.m */; };
 		0C9874C01AA04DB9006A2F9A /* Images.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 0C9874BF1AA04DB9006A2F9A /* Images.xcassets */; };
 		0C9874CF1AA04DB9006A2F9A /* TicketScannerTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 0C9874CE1AA04DB9006A2F9A /* TicketScannerTests.m */; };
 		0CA73F791AAB92640049060D /* QRCodeCaptureView.m in Sources */ = {isa = PBXBuildFile; fileRef = 0CA73F781AAB92640049060D /* QRCodeCaptureView.m */; };
@@ -56,8 +59,8 @@
 /* Begin PBXFileReference section */
 		0C1128061AB11B3700FD8C61 /* FXForms.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FXForms.h; sourceTree = "<group>"; };
 		0C1128071AB11B3700FD8C61 /* FXForms.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FXForms.m; sourceTree = "<group>"; };
-		0C1128091AB11D6C00FD8C61 /* ManualCheckinForm.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = ManualCheckinForm.h; path = TicketScanner/ManualCheckinForm.h; sourceTree = "<group>"; };
-		0C11280A1AB11D6C00FD8C61 /* ManualCheckinForm.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = ManualCheckinForm.m; path = TicketScanner/ManualCheckinForm.m; sourceTree = "<group>"; };
+		0C1128091AB11D6C00FD8C61 /* RegistrationForm.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = RegistrationForm.h; path = TicketScanner/RegistrationForm.h; sourceTree = "<group>"; };
+		0C11280A1AB11D6C00FD8C61 /* RegistrationForm.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = RegistrationForm.m; path = TicketScanner/RegistrationForm.m; sourceTree = "<group>"; };
 		0C1741CF1AF8756A00C9269A /* MainMenuTableViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MainMenuTableViewController.h; sourceTree = "<group>"; };
 		0C1741D01AF8756A00C9269A /* MainMenuTableViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MainMenuTableViewController.m; sourceTree = "<group>"; };
 		0C1741D21AF887F800C9269A /* ManagedEventsTableViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ManagedEventsTableViewController.h; sourceTree = "<group>"; };
@@ -70,6 +73,12 @@
 		0C265C011AF6B24A00508A26 /* LoginViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = LoginViewController.m; sourceTree = "<group>"; };
 		0C34386B1AA93E8B002E1ED5 /* ServerCommunicator.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ServerCommunicator.h; sourceTree = "<group>"; };
 		0C34386C1AA93E8B002E1ED5 /* ServerCommunicator.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ServerCommunicator.m; sourceTree = "<group>"; };
+		0C4CEBF81AFC25D70000F2E3 /* GuestsDataSource.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GuestsDataSource.h; sourceTree = "<group>"; };
+		0C4CEBF91AFC25D70000F2E3 /* GuestsDataSource.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GuestsDataSource.m; sourceTree = "<group>"; };
+		0C4CEBFB1AFC279B0000F2E3 /* Guest.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Guest.h; sourceTree = "<group>"; };
+		0C4CEBFC1AFC279B0000F2E3 /* Guest.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Guest.m; sourceTree = "<group>"; };
+		0C4CEC011AFC9F3D0000F2E3 /* FormField.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FormField.h; sourceTree = "<group>"; };
+		0C4CEC021AFC9F3D0000F2E3 /* FormField.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FormField.m; sourceTree = "<group>"; };
 		0C855A9D1AB519CB0058D450 /* CheckinTabBarController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CheckinTabBarController.h; sourceTree = "<group>"; };
 		0C855A9E1AB519CB0058D450 /* CheckinTabBarController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CheckinTabBarController.m; sourceTree = "<group>"; };
 		0C855AA01AB56B100058D450 /* whistle.wav */ = {isa = PBXFileReference; lastKnownFileType = audio.wav; path = whistle.wav; sourceTree = "<group>"; };
@@ -103,8 +112,8 @@
 		0C9874B41AA04DB9006A2F9A /* AppDelegate.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; name = AppDelegate.m; path = TicketScanner/AppDelegate.m; sourceTree = "<group>"; };
 		0C9874B61AA04DB9006A2F9A /* ScannerViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ScannerViewController.h; sourceTree = "<group>"; };
 		0C9874B71AA04DB9006A2F9A /* ScannerViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = ScannerViewController.m; sourceTree = "<group>"; };
-		0C9874B91AA04DB9006A2F9A /* ManualCheckinFormViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ManualCheckinFormViewController.h; sourceTree = "<group>"; };
-		0C9874BA1AA04DB9006A2F9A /* ManualCheckinViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = ManualCheckinViewController.m; sourceTree = "<group>"; };
+		0C9874B91AA04DB9006A2F9A /* RegistrationFormViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = RegistrationFormViewController.h; sourceTree = "<group>"; };
+		0C9874BA1AA04DB9006A2F9A /* RegistrationFormViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = RegistrationFormViewController.m; sourceTree = "<group>"; };
 		0C9874BF1AA04DB9006A2F9A /* Images.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Images.xcassets; sourceTree = "<group>"; };
 		0C9874C81AA04DB9006A2F9A /* TicketScannerTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = TicketScannerTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		0C9874CD1AA04DB9006A2F9A /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
@@ -174,8 +183,8 @@
 				0C93F9E11AFA08D500EC3735 /* RSVPListTableViewController.m */,
 				0C9874B61AA04DB9006A2F9A /* ScannerViewController.h */,
 				0C9874B71AA04DB9006A2F9A /* ScannerViewController.m */,
-				0C9874B91AA04DB9006A2F9A /* ManualCheckinFormViewController.h */,
-				0C9874BA1AA04DB9006A2F9A /* ManualCheckinViewController.m */,
+				0C9874B91AA04DB9006A2F9A /* RegistrationFormViewController.h */,
+				0C9874BA1AA04DB9006A2F9A /* RegistrationFormViewController.m */,
 			);
 			name = "Checking In";
 			sourceTree = "<group>";
@@ -237,10 +246,12 @@
 			children = (
 				0C93F9D81AF9AD5A00EC3735 /* EventsDataSource.h */,
 				0C93F9D91AF9AD5A00EC3735 /* EventsDataSource.m */,
+				0C4CEBF81AFC25D70000F2E3 /* GuestsDataSource.h */,
+				0C4CEBF91AFC25D70000F2E3 /* GuestsDataSource.m */,
 				0C93F9DB1AF9AD6E00EC3735 /* TicketsDataSource.h */,
 				0C93F9DC1AF9AD6E00EC3735 /* TicketsDataSource.m */,
-				0C1128091AB11D6C00FD8C61 /* ManualCheckinForm.h */,
-				0C11280A1AB11D6C00FD8C61 /* ManualCheckinForm.m */,
+				0C1128091AB11D6C00FD8C61 /* RegistrationForm.h */,
+				0C11280A1AB11D6C00FD8C61 /* RegistrationForm.m */,
 				0C93F9DF1AF9D2C800EC3735 /* DataSourceReadyForUseDelegate.h */,
 			);
 			name = "Data Sources";
@@ -306,8 +317,12 @@
 			children = (
 				0C93F9D21AF9ABD400EC3735 /* Event.h */,
 				0C93F9D31AF9ABD400EC3735 /* Event.m */,
+				0C4CEBFB1AFC279B0000F2E3 /* Guest.h */,
+				0C4CEBFC1AFC279B0000F2E3 /* Guest.m */,
 				0C93F9D51AF9ABE500EC3735 /* Ticket.h */,
 				0C93F9D61AF9ABE500EC3735 /* Ticket.m */,
+				0C4CEC011AFC9F3D0000F2E3 /* FormField.h */,
+				0C4CEC021AFC9F3D0000F2E3 /* FormField.m */,
 				0C34386B1AA93E8B002E1ED5 /* ServerCommunicator.h */,
 				0C34386C1AA93E8B002E1ED5 /* ServerCommunicator.m */,
 			);
@@ -432,8 +447,9 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				0C9874BB1AA04DB9006A2F9A /* ManualCheckinViewController.m in Sources */,
+				0C9874BB1AA04DB9006A2F9A /* RegistrationFormViewController.m in Sources */,
 				0C9874B51AA04DB9006A2F9A /* AppDelegate.m in Sources */,
+				0C4CEBFA1AFC25D70000F2E3 /* GuestsDataSource.m in Sources */,
 				0C1741D41AF887F800C9269A /* ManagedEventsTableViewController.m in Sources */,
 				0C93F9DA1AF9AD5A00EC3735 /* EventsDataSource.m in Sources */,
 				0C9874B81AA04DB9006A2F9A /* ScannerViewController.m in Sources */,
@@ -444,13 +460,15 @@
 				0C93F9DD1AF9AD6E00EC3735 /* TicketsDataSource.m in Sources */,
 				0C1741D11AF8756A00C9269A /* MainMenuTableViewController.m in Sources */,
 				0C1128081AB11B3700FD8C61 /* FXForms.m in Sources */,
-				0C11280B1AB11D6C00FD8C61 /* ManualCheckinForm.m in Sources */,
+				0C11280B1AB11D6C00FD8C61 /* RegistrationForm.m in Sources */,
 				0C1741D71AF88ACB00C9269A /* TicketsTableViewController.m in Sources */,
 				0CD8F6251AB2CFAC000150E2 /* ActivityIndicatorView.m in Sources */,
 				0C34386D1AA93E8B002E1ED5 /* ServerCommunicator.m in Sources */,
 				0C1741DB1AF8972D00C9269A /* SettingsTableViewController.m in Sources */,
 				0C265C021AF6B24A00508A26 /* LoginViewController.m in Sources */,
+				0C4CEC031AFC9F3D0000F2E3 /* FormField.m in Sources */,
 				0C93F9E21AFA08D500EC3735 /* RSVPListTableViewController.m in Sources */,
+				0C4CEBFD1AFC279B0000F2E3 /* Guest.m in Sources */,
 				0CA73F791AAB92640049060D /* QRCodeCaptureView.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

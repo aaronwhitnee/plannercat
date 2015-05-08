@@ -10,8 +10,10 @@
 
 @interface ManagedEventsTableViewController ()
 
+@property(nonatomic, strong) Event *selectedEvent;
 @property(nonatomic, strong) EventsDataSource *eventsDataSource;
 @property(nonatomic, strong) ActivityIndicatorView *activityIndicator;
+@property(nonatomic, strong) CheckinTabBarController *eventController;
 
 @end
 
@@ -35,6 +37,13 @@ enum { EVENT_CELL_HEIGHT = 100, GAP_BTWN_VIEWS = 5, IMAGE_HEIGHT = 0, IMAGE_WIDT
 - (void)didReceiveMemoryWarning {
     [super didReceiveMemoryWarning];
     // Dispose of any resources that can be recreated.
+}
+
+-(CheckinTabBarController *) eventController {
+    if (!_eventController) {
+        _eventController = [[CheckinTabBarController alloc] initWithEvent:self.selectedEvent];
+    }
+    return _eventController;
 }
 
 - (ActivityIndicatorView *) activityIndicator {
@@ -89,11 +98,9 @@ enum { EVENT_CELL_HEIGHT = 100, GAP_BTWN_VIEWS = 5, IMAGE_HEIGHT = 0, IMAGE_WIDT
     return EVENT_CELL_HEIGHT;
 }
 
-// Takes user to view guests and start checking them into their event
 - (void) tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath {
-    Event *selectedEvent = [self.eventsDataSource eventAtIndex:[indexPath row]];
-    CheckinTabBarController *checkinController = [[CheckinTabBarController alloc] initWithEvent:selectedEvent];
-    [self.navigationController pushViewController:checkinController animated:YES];
+    self.selectedEvent = [self.eventsDataSource eventAtIndex:[indexPath row]];
+    [self.navigationController pushViewController:self.eventController animated:YES];
 }
 
 - (UITableViewCell *) eventViewForIndex:(NSInteger)rowIndex withTableViewCell:(UITableViewCell *) cell {
@@ -117,9 +124,7 @@ enum { EVENT_CELL_HEIGHT = 100, GAP_BTWN_VIEWS = 5, IMAGE_HEIGHT = 0, IMAGE_WIDT
     CGRect bounds = [[UIScreen mainScreen] applicationFrame];
     CGRect viewFrame = CGRectMake(0, 0, bounds.size.width, EVENT_CELL_HEIGHT);
     UIView *thisView = [[UIView alloc] initWithFrame: viewFrame];
-    
-//    UIImageView *iView = [[UIImageView alloc] initWithImage: img];
-    
+        
     UILabel *eventInfoLabel = [[UILabel alloc]
                                  initWithFrame:CGRectMake(IMAGE_WIDTH + 2 * 10, 5,
                                                           viewFrame.size.width - IMAGE_WIDTH - 10,

@@ -9,6 +9,6 @@
 #import <Foundation/Foundation.h>
 #import "DataSourceReadyForUseDelegate.h"
 
-@interface TicketsDataSource : NSObject<DataSourceReadyForUseDelegate>
+@interface TicketsDataSource : NSObject<ConnectionFinishedDelegate>
 
 @end

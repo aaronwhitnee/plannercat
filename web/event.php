@@ -1,27 +1,26 @@
-<?php 
+<?php
 	include "includes/header.php";
 	include "includes/functions.inc.php";
 	$con = sql_connect();
 
 	if (!empty($_POST)){
 		mysqli_query($con, "INSERT INTO user(firstName, lastName, hasAccount) VALUES ('Guest', 'User', 0);");
-		$uID = mysqli_insert_id($con);	
+		$uID = mysqli_insert_id($con);
 		$eID = $_POST['eventID'];
 		mysqli_query($con, "INSERT INTO receipt(user_id, event_id, quantity) VALUES ($uID, $eID, 1);");
-		$i=0;
-		foreach ($_POST as $name => $val){
+		$i = 0;
+		foreach ($_POST as $name => $val) {
 			if ($i == count($_POST) - 1)
 				break;
 			mysqli_query($con, "INSERT INTO user_form_values(form_field_id, user_id, user_value) VALUES($name, $uID, '$val');");
 			$i++;
 		}
-		$jsonStr = '[{"userID":' . $uID . ',"eventID":' . $eID . ',"name":"Guest User"}]';
+		$jsonStr = '[{"userID":' . $uID . ',"eventID":' . $eID . ',"firstName":"Guest","lastName":"User"}]';
 		$qrStr = "https://chart.googleapis.com/chart?chs=350x350&cht=qr&chl=" . $jsonStr . "&choe=UTF-8";
 		echo("<img src='" . $qrStr . "'>");
 	}
 
-	else{
-
+	else {
 		$eID = intval($_GET['eventID']);
 		$query = mysqli_query($con, "SELECT * FROM event WHERE id=$eID;");
 		$result = mysqli_fetch_array($query);
@@ -42,7 +41,7 @@
 				echo $row['question'];
 				if ($row['field_type'] == 'radio'){
 					echo ": <br>";
-					$query2 = mysqli_query($con, 
+					$query2 = mysqli_query($con,
 						"SELECT * FROM field_list_values WHERE form_field_id=$fieldID");
 					while ($option = mysqli_fetch_array($query2)){
 						echo "
@@ -53,11 +52,11 @@
 				}
 
 				else if ($row['field_type'] == 'text'){
-					echo " <input type='text' name='" . $fieldID . "'><br>";
+					echo "<input type='text' name='" . $fieldID . "'><br>";
 				}
 			}
 		?>
-		<input type='hidden' value= <?php echo "'" . $eID . "'"; ?> name='eventID'> 
+		<input type='hidden' value= <?php echo "'" . $eID . "'"; ?> name='eventID'>
 		<input type='submit' value='Sign Up!'>
 	</form>
 </center>

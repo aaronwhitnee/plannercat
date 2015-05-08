@@ -59,8 +59,8 @@
     AVCaptureMetadataOutput *captureMetadataOutput = [[AVCaptureMetadataOutput alloc] init];
     [self.videoCaptureSession addOutput:captureMetadataOutput];
     
-    dispatch_queue_t dispatchQueue = dispatch_queue_create("videoQueue", NULL);
-    [captureMetadataOutput setMetadataObjectsDelegate:self queue:dispatchQueue];
+    dispatch_queue_t metadataQueue = dispatch_queue_create("videoQueue", DISPATCH_QUEUE_SERIAL);
+    [captureMetadataOutput setMetadataObjectsDelegate:self.delegate queue:metadataQueue];
     [captureMetadataOutput setMetadataObjectTypes:[NSArray arrayWithObjects:AVMetadataObjectTypeQRCode, nil]];
     
     self.videoPreviewLayer = [[AVCaptureVideoPreviewLayer alloc] initWithSession:self.videoCaptureSession];
@@ -75,28 +75,17 @@
 
 -(void) stopReading {
     self.isReading = NO;
-    [self.activityIndicator stopAnimating];
+    [self.activityIndicator startAnimating];
+    [self.videoCaptureSession stopRunning];
     self.videoCaptureSession = nil;
-}
-
-// Called when the Scanner has successfully read data from the QR code
--(void) captureOutput:(AVCaptureOutput *)captureOutput didOutputMetadataObjects:(NSArray *)metadataObjects
-       fromConnection:(AVCaptureConnection *)connection {
-    
-    if (metadataObjects && [metadataObjects count]) {
-        if ([self.delegate respondsToSelector:@selector(acceptScannedData:)]) {
-            [self.activityIndicator startAnimating];
-            [self.delegate performSelector:@selector(acceptScannedData:) withObject:metadataObjects];
-        }
-    }
 }
 
 -(ActivityIndicatorView *) activityIndicator {
     if(_activityIndicator) {
         return _activityIndicator;
     }
-    CGRect activityIndicatorFrame = CGRectMake(0, 0, activityIndicatorWidth, activityIndicatorWidth);
-    _activityIndicator = [[ActivityIndicatorView alloc] initWithFrame:activityIndicatorFrame];
+//    CGRect activityIndicatorFrame = CGRectMake(0, 0, activityIndicatorWidth, activityIndicatorWidth);
+    _activityIndicator = [[ActivityIndicatorView alloc] initWithFrame:self.frame];
     return _activityIndicator;
 }
 

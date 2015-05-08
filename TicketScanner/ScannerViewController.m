@@ -13,6 +13,7 @@
 @property(nonatomic) QRCodeCaptureView *scannerView;
 @property(nonatomic) ServerCommunicator *webServer;
 
+@property(nonatomic) NSInteger activeEventID;
 @property(nonatomic) UIButton *startStopButton;
 @property(nonatomic, strong, readwrite) AVAudioPlayer *whistleSound;
 @property(nonatomic, strong) UILabel *firstNameLabel;
@@ -136,18 +137,20 @@
     [self.scannerView startReading];
 }
 
--(void) acceptScannedData:(NSArray *)metadataObjects {
+# pragma mark - AVCaptureMetadataOutputObjectsDelegate method
+
+-(void) captureOutput:(AVCaptureOutput *)captureOutput didOutputMetadataObjects:(NSArray *)metadataObjects
+       fromConnection:(AVCaptureConnection *)connection {
     // TODO: play "beep" sound for valid/successful scan here...
     [self.scannerView stopReading];
-    
-    NSDictionary *ticketData = [self generateJSONWithScannedData:metadataObjects];
-    
-    if (!ticketData) {
-        // TODO: alert user of invalid ticket
-        return;
+    if (metadataObjects && [metadataObjects count]) {
+        NSDictionary *ticketData = [self generateJSONWithScannedData:metadataObjects];
+        if (!ticketData) {
+            // TODO: alert user of invalid ticket
+            return;
+        }
+        [self.webServer performServerRequestType:@"checkinTicket" withData:ticketData];
     }
-    
-    [self.webServer performServerRequestType:@"checkinTicket" withData:ticketData];
 }
 
 -(NSDictionary *) generateJSONWithScannedData:(NSArray *)metadata {
@@ -156,8 +159,8 @@
     }
     
     NSError *jsonError;
-    NSString *jsonString = [metadata objectAtIndex:0];
-    NSLog(@"Scanned JSON from ticket: %@", jsonString);
+    NSString *jsonString = [[metadata objectAtIndex:0] stringValue];
+    NSLog(@"User JSON from ticket: %@", jsonString);
     NSData *rawData = [jsonString dataUsingEncoding:NSUTF8StringEncoding];
     NSDictionary *jsonData = [NSJSONSerialization JSONObjectWithData:rawData options:kNilOptions error:&jsonError];
     

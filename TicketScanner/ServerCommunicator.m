@@ -56,7 +56,7 @@
     self.request = [NSMutableURLRequest requestWithURL:[self.url standardizedURL]];
     self.request.HTTPMethod = @"POST";
     [self.request setValue:@"application/json; charset=utf-8" forHTTPHeaderField:@"Content-Type"];
-    [self.request setValue:[NSString stringWithFormat:@"%d", jsonRequestData.length] forHTTPHeaderField:@"Content-Length"];
+    [self.request setValue:[NSString stringWithFormat:@"%lu", jsonRequestData.length] forHTTPHeaderField:@"Content-Length"];
     self.request.HTTPBody = jsonRequestData;
     
     self.connection = [[NSURLConnection alloc] initWithRequest:self.request delegate:self startImmediately:YES];

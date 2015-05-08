@@ -46,8 +46,17 @@ if (is_array($request)) {
     $response["checkin_status"] = $checkin_status;
   }
 
-  // Check in via form submission
-  else if ($requestType == "checkinManual") {
+  // Registration and checkin via form submission
+  else if ($requestType == "register") {
+    $response["status"] = "ok";
+
+    $eventID = $requst["requst"]["eventID"];
+    $userID = $request["request"]["userID"];
+
+  }
+
+  // Fetch the registration form JSON for a given event
+  else if ($requestType == "eventForm") {
     $response["status"] = "ok";
 
     $eventID = $request["request"]["eventID"];
@@ -60,6 +69,15 @@ if (is_array($request)) {
 
     $userID = $request["request"]["userID"];
     $response["eventsJsonString"] = get_user_events($userID);
+  }
+
+  // Fetch all guests registered for a given event
+  else if ($requestType == "guests") {
+    $response["status"] = "ok";
+
+    $eventID = $request["request"]["eventID"];
+    $response["guestsJsonString"] = get_event_guests($eventID);
+    $response["eventID"] = $eventID;
   }
 
   // Fetch all ticket receipts owned by current user

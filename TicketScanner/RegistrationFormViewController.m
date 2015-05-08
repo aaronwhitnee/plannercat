@@ -6,14 +6,16 @@
 //  Copyright (c) 2015 SSU. All rights reserved.
 //
 
-#import "ManualCheckinFormViewController.h"
+#import "RegistrationFormViewController.h"
 #import "ActivityIndicatorView.h"
 
-@interface ManualCheckinFormViewController ()
+@interface RegistrationFormViewController ()
 
-@property(nonatomic) ServerCommunicator *webServer;
+@property(nonatomic) NSInteger activeEventID;
 @property(nonatomic) UIAlertController *alertController; // iOS 8.0+
 @property(nonatomic) UIAlertView *alertView; // iOS < 8.0
+
+@property(nonatomic) ServerCommunicator *webServer;
 @property(nonatomic) ActivityIndicatorView *activityIndicator;
 @property(nonatomic, strong, readwrite) AVAudioPlayer *whistleSound;
 
@@ -22,20 +24,41 @@
 @end
 
 
-@implementation ManualCheckinFormViewController
+@implementation RegistrationFormViewController
+
+-(instancetype) initWithEventID:(NSInteger)eventID {
+    self = [super init];
+    if (self) {
+        self.formController.form = [RegistrationForm new];
+        self.activeEventID = eventID;
+    }
+    return self;
+}
 
 -(void) viewDidLoad {
     [super viewDidLoad];
     
-    // TODO: build a dynamic FXForm from JSON (look at dynamic example)
-    
     [self.view addSubview:self.activityIndicator];
     
-    self.formController.form = [[ManualCheckinForm alloc] init];
+    self.formController.form = [[RegistrationForm alloc] init];
     self.formController.tableView = self.tableView;
     
     self.tableView.backgroundColor = [UIColor colorWithRed:0.3 green:0.3 blue:0.3 alpha:1.0];
     self.tableView.separatorColor = [UIColor blackColor];
+}
+
+-(ActivityIndicatorView *) activityIndicator {
+    if(_activityIndicator) {
+        return _activityIndicator;
+    }
+    _activityIndicator = [[ActivityIndicatorView alloc] initWithFrame:self.view.frame];
+    _activityIndicator.center = self.view.center;
+    return _activityIndicator;
+}
+
+# pragma mark - DataSourceReadyForUseDelegate methods
+
+-(void)dataSourceReadyForUse:(RegistrationForm *)dataSource {
 }
 
 // Customize table section headers
@@ -45,15 +68,13 @@
     headerView.textLabel.textColor = [UIColor colorWithRed:220/255.0 green:220/255.0 blue:220/255.0 alpha:1.0];
 }
 
--(void) submitManualCheckinForm:(UITableViewCell<FXFormFieldCell> *)cell {
-    self.webServer.delegate = self;
-
-    ManualCheckinForm *form = cell.field.form;
+-(void) submitRegistrationForm:(UITableViewCell<FXFormFieldCell> *)cell {
+    RegistrationForm *currentForm = cell.field.form;
     NSMutableDictionary *fieldValues = [[NSMutableDictionary alloc] init];
     BOOL formIsValid = YES;
         
-    for (FXFormField *field in [form fields]) {
-        id val = [form valueForKey: [field valueForKey:@"key"]];
+    for (FXFormField *field in [currentForm fields]) {
+        id val = [currentForm valueForKey: [field valueForKey:@"key"]];
         if ( [val length] ) {
             if ( [[field valueForKey:@"key"] isEqual:@"email"] ) {
                 formIsValid = [self validateEmailAddress:val];
@@ -72,9 +93,17 @@
     if (formIsValid) {
         NSLog(@"%@",fieldValues);
         [self.activityIndicator startAnimating];
+        
         # warning need to submit current eventID along with form values
-        [self.webServer performServerRequestType:@"checkinManual" withData:fieldValues];
+        [self.webServer performServerRequestType:@"register" withData:fieldValues];
     }
+}
+
+# pragma mark - ConnectionFinishedDelegate methods
+
+-(void) handleServerResponse:(NSDictionary *)response {
+    [self.activityIndicator stopAnimating];
+    [self displayAlertWithTitle:@"Check In Successful!"];
 }
 
 -(BOOL) validateEmailAddress:(NSString *)emailString {
@@ -87,16 +116,6 @@
     }
     return YES;
 }
-
--(ActivityIndicatorView *) activityIndicator {
-    if(_activityIndicator) {
-        return _activityIndicator;
-    }
-    _activityIndicator = [[ActivityIndicatorView alloc] initWithFrame:self.view.frame];
-    _activityIndicator.center = self.view.center;
-    return _activityIndicator;
-}
-
 
 -(void) displayAlertWithTitle:(NSString *)title {
     if ([[UIDevice currentDevice].systemVersion floatValue] < 8.0) {
@@ -130,11 +149,6 @@
                                       otherButtonTitles:@"OK", nil];
     }
     return _alertView;
-}
-
--(void) handleServerResponse:(NSDictionary *)response {
-    [self.activityIndicator stopAnimating];
-    [self displayAlertWithTitle:@"Check In Successful!"];
 }
 
 @end

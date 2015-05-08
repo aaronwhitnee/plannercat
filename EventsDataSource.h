@@ -15,7 +15,7 @@
 
 @interface EventsDataSource : NSObject<ConnectionFinishedDelegate>
 
-@property(nonatomic, strong) id<DataSourceReadyForUseDelegate> delegate;
+@property(nonatomic, weak) id<DataSourceReadyForUseDelegate> delegate;
 @property(nonatomic) BOOL eventsDataReadyForUse;
 
 -(instancetype) initWithEventsManagedByUser:(NSInteger)userID;

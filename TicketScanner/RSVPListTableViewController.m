@@ -10,18 +10,46 @@
 
 @interface RSVPListTableViewController ()
 
+@property(nonatomic) NSInteger activeEventID;
+@property(nonatomic, strong) GuestsDataSource *guestsDataSource;
+@property(nonatomic, strong) ActivityIndicatorView *activityIndicator;
+
 @end
 
+enum {  GUEST_CELL_HEIGHT = 80, GAP_BTWN_VIEWS = 8, USER_IMAGE_WIDTH = 60,
+        CHECKIN_BUTTON_WIDTH = 40, CHECKIN_BUTTON_HEIGHT = 30   };
+
+static NSString *GuestCellID = @"guest";
+
 @implementation RSVPListTableViewController
+
+-(instancetype) initWithEventID:(NSInteger)eventID {
+    self = [super init];
+    if (self) {
+        [self.tableView registerClass:[UITableViewCell class] forCellReuseIdentifier:GuestCellID];
+        self.activeEventID = eventID;
+    }
+    return self;
+}
 
 - (void)viewDidLoad {
     [super viewDidLoad];
     
-    // Uncomment the following line to preserve selection between presentations.
-    // self.clearsSelectionOnViewWillAppear = NO;
-    
-    // Uncomment the following line to display an Edit button in the navigation bar for this view controller.
-    // self.navigationItem.rightBarButtonItem = self.editButtonItem;
+    [self.view addSubview:self.activityIndicator];
+    self.refreshControl = [UIRefreshControl new];
+    [self.refreshControl addTarget:self action:@selector(refreshTableView:) forControlEvents:UIControlEventValueChanged];
+}
+
+- (ActivityIndicatorView *) activityIndicator {
+    if (!_activityIndicator) {
+        _activityIndicator = [[ActivityIndicatorView alloc] initWithFrame:self.view.frame];
+    }
+    return _activityIndicator;
+}
+
+- (void) refreshTableView:(UIRefreshControl *)sender {
+    [self.tableView reloadData];
+    [sender endRefreshing];
 }
 
 - (void)didReceiveMemoryWarning {
@@ -31,68 +59,101 @@
 
 #pragma mark - Table view data source
 
+-(GuestsDataSource *) guestsDataSource {
+    if (!_guestsDataSource) {
+//        _guestsDataSource = [[GuestsDataSource alloc] initWithGuestsForEvent:self.activeEventID];
+        _guestsDataSource = [[GuestsDataSource alloc] initWithGuestsForEvent:8];
+        _guestsDataSource.delegate = self;
+    }
+    return _guestsDataSource;
+}
+
+-(void) dataSourceReadyForUse:(GuestsDataSource *) dataSource {
+    [self.tableView reloadData];
+    [self.activityIndicator stopAnimating];
+}
+
 - (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView {
-    // Return the number of sections.
+    if (! [self.guestsDataSource guestsDataReadyForUse]) {
+        [self.activityIndicator startAnimating];
+        self.activityIndicator.hidesWhenStopped = YES;
+    }
     return 1;
 }
 
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section {
-    // Return the number of rows in the section.
-    return 0;
+    NSLog(@"%s: Number of rows in Table View: %d", __func__, (int)[self.guestsDataSource numberOfGuests]);
+    return [self.guestsDataSource numberOfGuests];
 }
 
-/*
+
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath {
-    UITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:<#@"reuseIdentifier"#> forIndexPath:indexPath];
-    
-    // Configure the cell...
+    UITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:GuestCellID forIndexPath:indexPath];
+    cell = [self guestViewForIndex:[indexPath row] withTableViewCell:cell];
     
     return cell;
 }
-*/
 
-/*
-// Override to support conditional editing of the table view.
-- (BOOL)tableView:(UITableView *)tableView canEditRowAtIndexPath:(NSIndexPath *)indexPath {
-    // Return NO if you do not want the specified item to be editable.
-    return YES;
+-(CGFloat) tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath {
+    return GUEST_CELL_HEIGHT;
 }
-*/
 
-/*
-// Override to support editing the table view.
-- (void)tableView:(UITableView *)tableView commitEditingStyle:(UITableViewCellEditingStyle)editingStyle forRowAtIndexPath:(NSIndexPath *)indexPath {
-    if (editingStyle == UITableViewCellEditingStyleDelete) {
-        // Delete the row from the data source
-        [tableView deleteRowsAtIndexPaths:@[indexPath] withRowAnimation:UITableViewRowAnimationFade];
-    } else if (editingStyle == UITableViewCellEditingStyleInsert) {
-        // Create a new instance of the appropriate class, insert it into the array, and add a new row to the table view
-    }   
+-(void) tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath {
+    Guest *selectedGuest = [self.guestsDataSource guestAtIndex:[indexPath row]];
+    NSString *guestName = [NSString stringWithFormat:@"%@ %@", [selectedGuest firstName], [selectedGuest lastName]];
+    NSLog(@"Selected guest: %@", guestName);
 }
-*/
 
-/*
-// Override to support rearranging the table view.
-- (void)tableView:(UITableView *)tableView moveRowAtIndexPath:(NSIndexPath *)fromIndexPath toIndexPath:(NSIndexPath *)toIndexPath {
+-(UITableViewCell *) guestViewForIndex:(NSInteger)rowIndex withTableViewCell:(UITableViewCell *)cell {
+    enum {USER_IMAGE_VIEW_TAG = 100, MAIN_VIEW_TAG = 200, USER_LABEL_TAG = 300};
+    
+    Guest *guest = [self.guestsDataSource guestAtIndex:(int)rowIndex];
+    
+    dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_BACKGROUND, 0), ^{
+        [guest setThumbnailFromImage:[guest smallSizeUserImage]];
+    });
+    
+    UIView *mainView = [cell viewWithTag: MAIN_VIEW_TAG];
+    
+    if ( mainView ) {
+        UIImageView *imageView = (UIImageView *)[mainView viewWithTag: USER_IMAGE_VIEW_TAG];
+        NSArray *subViews = [imageView subviews];
+        for ( UIView *v in subViews )
+            [v removeFromSuperview];
+        imageView.image = [guest thumbnailImage];
+        UILabel *guestLabel = (UILabel *) [mainView viewWithTag: USER_LABEL_TAG];
+        guestLabel.attributedText = [guest descriptionForListEntry];
+        return cell;
+    }
+    
+    CGRect bounds = [[UIScreen mainScreen] applicationFrame];
+    CGRect viewFrame = CGRectMake(0, 0, bounds.size.width, GUEST_CELL_HEIGHT);
+    UIView *thisView = [[UIView alloc] initWithFrame: viewFrame];
+    
+    UIImage *img = [guest thumbnailImage];
+    CGRect imgFrame = CGRectMake(2 * GAP_BTWN_VIEWS, (viewFrame.size.height - USER_IMAGE_WIDTH) / 2, USER_IMAGE_WIDTH, USER_IMAGE_WIDTH );
+    UIImageView *iView = [[UIImageView alloc] initWithImage: img];
+    iView.tag = USER_IMAGE_VIEW_TAG;
+    iView.frame = imgFrame;
+    [thisView addSubview: iView];
+    
+    UILabel *userInfoLabel = [[UILabel alloc]
+                               initWithFrame:CGRectMake(USER_IMAGE_WIDTH + 2 * 15, GAP_BTWN_VIEWS,
+                                                        viewFrame.size.width - USER_IMAGE_WIDTH - (2 * GAP_BTWN_VIEWS),
+                                                        viewFrame.size.height - GAP_BTWN_VIEWS)];
+    
+    userInfoLabel.tag = USER_LABEL_TAG;
+    NSAttributedString *desc = [guest descriptionForListEntry];
+    userInfoLabel.attributedText = desc;
+    
+    userInfoLabel.numberOfLines = 2;
+    [thisView addSubview: userInfoLabel];
+    
+    thisView.tag = MAIN_VIEW_TAG;
+    [[cell contentView] addSubview:thisView];
+    
+    return cell;
+
 }
-*/
-
-/*
-// Override to support conditional rearranging of the table view.
-- (BOOL)tableView:(UITableView *)tableView canMoveRowAtIndexPath:(NSIndexPath *)indexPath {
-    // Return NO if you do not want the item to be re-orderable.
-    return YES;
-}
-*/
-
-/*
-#pragma mark - Navigation
-
-// In a storyboard-based application, you will often want to do a little preparation before navigation
-- (void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender {
-    // Get the new view controller using [segue destinationViewController].
-    // Pass the selected object to the new view controller.
-}
-*/
 
 @end

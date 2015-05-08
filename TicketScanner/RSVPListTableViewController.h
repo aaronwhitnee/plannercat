@@ -7,7 +7,13 @@
 //
 
 #import <UIKit/UIKit.h>
+#import "Event.h"
+#import "GuestsDataSource.h"
+#import "ActivityIndicatorView.h"
+#import "CheckinTabBarController.h"
 
-@interface RSVPListTableViewController : UITableViewController
+@interface RSVPListTableViewController : UITableViewController<DataSourceReadyForUseDelegate,UITableViewDelegate,UITableViewDataSource>
+
+- (instancetype) initWithEventID:(NSInteger)eventID;
 
 @end

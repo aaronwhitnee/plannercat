@@ -131,9 +131,9 @@ function get_event_guests($eventID) {
 	$db = sql_connect();
 
 	$query = mysqli_query($db,
-		"SELECT * FROM event AS E
-		JOIN events_managers AS EM ON ( EM.event_id = E.id )
-		WHERE EM.user_id = $userID");
+		"SELECT U.id, U.firstName, U.lastName, U.email FROM user AS U
+		JOIN receipt AS R ON ( R.user_id = U.id )
+		WHERE R.event_id = $eventID");
 
 	$guests = array();
 	while ($row = mysqli_fetch_assoc($query)) {
@@ -149,7 +149,7 @@ function get_event_guests($eventID) {
 /*************
 	Checks if a given user has registered
 	for a given event by checking if a receipt exists.
-	If exists, user is checked in.
+	If exactly one receipt exists, user is checked in.
 	Returns a string reporting checkin status.
 *************/
 function checkin_user($userID, $eventID) {
@@ -168,20 +168,21 @@ function checkin_user($userID, $eventID) {
 	if (count($receipt) < 1) {
 		// user has not registered for this event
 		mysqli_close($db);
-		return "no_receipt";
+		return "invalid";
 	}
 	else if (count($receipt) > 1) {
 		// user has registered multiple times for this event
 		mysqli_close($db);
 		return "duplicate";
 	}
-	else if ($receipt["checkin"] == 1) {
+	else if ($receipt[0]["checkin"] == 1) {
+		// user has already been checked in
 		mysqli_close($db);
-		return "already_registered";
+		return "repeat";
 	}
 	else {
 		$receiptID = $receipt["id"];
-		$query = mysqli_query($db, "UPDATE receipt SET checkin = '1' WHERE receipt.id = $receiptID");
+		mysqli_query($db, "UPDATE receipt SET checkin = '1' WHERE receipt.id = $receiptID");
 		mysqli_close($db);
 	}
 

@@ -10,10 +10,9 @@
 
 @interface CheckinTabBarController ()
 
-@property(nonatomic, strong) Event *activeEvent;
 @property(nonatomic, strong) RSVPListTableViewController *rsvpListTableViewController;
 @property(nonatomic, strong) ScannerViewController *scannerViewController;
-@property(nonatomic, strong) ManualCheckinFormViewController *manualCheckinViewController;
+@property(nonatomic, strong) RegistrationFormViewController *registrationViewController;
 
 @end
 
@@ -24,7 +23,7 @@
     if (self) {
         self.activeEvent = event;
         self.navigationController.navigationBarHidden = YES;
-        self.navigationItem.title = [self.activeEvent title];
+        self.title = [self.activeEvent title];
     }
     return self;
 }
@@ -34,7 +33,7 @@
         
     [self addChildViewController:self.rsvpListTableViewController];
     [self addChildViewController:self.scannerViewController];
-    [self addChildViewController:self.manualCheckinViewController];
+    [self addChildViewController:self.registrationViewController];
         
     CGRect rect = CGRectMake(0, 0, 1, 1);
     UIGraphicsBeginImageContextWithOptions(rect.size, NO, 1.0);
@@ -52,7 +51,7 @@
 
 -(RSVPListTableViewController *) rsvpListTableViewController {
     if (!_rsvpListTableViewController) {
-        _rsvpListTableViewController = [[RSVPListTableViewController alloc] init];
+        _rsvpListTableViewController = [[RSVPListTableViewController alloc] initWithEventID:[self.activeEvent eventID]];
         UIImage *img = [UIImage imageNamed:@"second"];
         UITabBarItem *tab = [[UITabBarItem alloc] initWithTitle:@"Guest List" image:img selectedImage:img];
         _rsvpListTableViewController.tabBarItem = tab;
@@ -62,6 +61,7 @@
 
 -(ScannerViewController *) scannerViewController {
     if (!_scannerViewController) {
+//        _scannerViewController = [[ScannerViewController alloc] initWithEventID:[self.activeEvent eventID]];
         _scannerViewController = [[ScannerViewController alloc] init];
         UIImage *img = [UIImage imageNamed:@"first"];
         UITabBarItem *tab = [[UITabBarItem alloc] initWithTitle:@"Scan Tickets" image:img selectedImage:img];
@@ -70,14 +70,15 @@
     return _scannerViewController;
 }
 
--(ManualCheckinFormViewController *) manualCheckinViewController {
-    if (!_manualCheckinViewController) {
-        _manualCheckinViewController = [[ManualCheckinFormViewController alloc] init];
+-(RegistrationFormViewController *) registrationViewController {
+    if (!_registrationViewController) {
+//        _registrationViewController = [[RegistrationFormViewController alloc] initwithEventID:[self.activeEvent eventID]];
+        _registrationViewController = [[RegistrationFormViewController alloc] init];
         UIImage *img = [UIImage imageNamed:@"second"];
         UITabBarItem *tab = [[UITabBarItem alloc] initWithTitle:@"Register" image:img selectedImage:img];
-        _manualCheckinViewController.tabBarItem = tab;
+        _registrationViewController.tabBarItem = tab;
     }
-    return _manualCheckinViewController;
+    return _registrationViewController;
 }
 
 - (void)didReceiveMemoryWarning {

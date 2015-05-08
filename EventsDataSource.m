@@ -96,9 +96,6 @@
         [self.allEvents addObject:event];
     }
     self.eventsJSON = nil;
-    if ([self.delegate respondsToSelector:@selector(dataSourceReadyForUse:)]) {
-        [self.delegate performSelector:@selector(dataSourceReadyForUse:) withObject:self];
-    }
 }
 
 @end

@@ -9,7 +9,7 @@
 #import "AppDelegate.h"
 #import "CheckinTabBarController.h"
 #import "ScannerViewController.h"
-#import "ManualCheckinFormViewController.h"
+#import "RegistrationFormViewController.h"
 #import "LoginViewController.h"
 #import "MainMenuTableViewController.h"
 

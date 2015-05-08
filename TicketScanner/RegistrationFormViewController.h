@@ -9,10 +9,11 @@
 #import <UIKit/UIKit.h>
 #import <AVFoundation/AVFoundation.h>
 #import "FXForms.h"
-#import "ManualCheckinForm.h"
+#import "RegistrationForm.h"
 #import "ServerCommunicator.h"
 
-@interface ManualCheckinFormViewController : FXFormViewController <ConnectionFinishedDelegate>
+@interface RegistrationFormViewController : FXFormViewController <DataSourceReadyForUseDelegate>
 
+- (instancetype) initWithEventID:(NSInteger)eventID;
 
 @end

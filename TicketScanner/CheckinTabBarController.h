@@ -10,9 +10,11 @@
 #import "Event.h"
 #import "RSVPListTableViewController.h"
 #import "ScannerViewController.h"
-#import "ManualCheckinFormViewController.h"
+#import "RegistrationFormViewController.h"
 
 @interface CheckinTabBarController : UITabBarController
+
+@property(nonatomic, strong) Event *activeEvent;
 
 -(instancetype) initWithEvent:(Event *)event;
 
