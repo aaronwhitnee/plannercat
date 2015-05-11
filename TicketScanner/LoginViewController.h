@@ -13,6 +13,4 @@
 
 @interface LoginViewController : UIViewController<ConnectionFinishedDelegate, UITextFieldDelegate>
 
-
-
 @end

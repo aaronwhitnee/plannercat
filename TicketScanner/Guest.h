@@ -9,23 +9,23 @@
 #import <UIKit/UIKit.h>
 #import <Foundation/Foundation.h>
 
-@interface Guest : NSObject
+@interface Guest : NSObject <NSCoding>
 
 @property(nonatomic, strong) UIImage *thumbnailImage;
 
--(instancetype) initWithDictionary:(NSDictionary *)guestDictionary;
+- (instancetype) initWithDictionary:(NSDictionary *)guestDictionary;
 
--(void) setThumbnailFromImage:(UIImage *)image;
--(void) addValue:(NSString *)attrVal forAttribute:(NSString *)attrName;
--(id) getValueForAttribute:(NSString *)attribute;
+- (void) setThumbnailFromImage:(UIImage *)image;
+- (void) addValue:(NSString *)attrVal forAttribute:(NSString *)attrName;
+- (id) getValueForAttribute:(NSString *)attribute;
 
--(NSAttributedString *)descriptionForListEntry;
--(UIImage *) smallSizeUserImage;
+- (NSAttributedString *)descriptionForListEntry;
+- (UIImage *)smallSizeUserImage;
 
--(NSInteger) userID;
--(NSString *) firstName;
--(NSString *) lastName;
--(NSString *) email;
--(NSString *) photoURL;
+- (NSInteger) userID;
+- (NSString *)firstName;
+- (NSString *)lastName;
+- (NSString *)email;
+- (NSString *)photoURL;
 
 @end

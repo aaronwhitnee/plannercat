@@ -11,6 +11,7 @@
 @interface Guest()
 
 @property(nonatomic,strong) NSMutableDictionary *guestAttributes;
+@property(nonatomic, strong) UIImage *smallSizeUserImage;
 
 @end
 
@@ -18,7 +19,7 @@ enum {SMALL_FONT_SIZE = 12, LARGE_FONT_SIZE = 18, THUMBNAIL_WIDTH = 60};
 
 @implementation Guest
 
--(instancetype) initWithDictionary:(NSDictionary *)guestDictionary {
+- (instancetype) initWithDictionary:(NSDictionary *)guestDictionary {
     self = [super init];
     if (self) {
         self.guestAttributes = [NSMutableDictionary dictionaryWithDictionary:guestDictionary];
@@ -26,7 +27,21 @@ enum {SMALL_FONT_SIZE = 12, LARGE_FONT_SIZE = 18, THUMBNAIL_WIDTH = 60};
     return self;
 }
 
--(void) setThumbnailFromImage:(UIImage *)image {
+#pragma mark - NSCoding Archiving methods
+
+- (instancetype)initWithCoder:(NSCoder *)aDecoder {
+    self = [super init];
+    if (self) {
+        [aDecoder decodeObjectForKey:@"guestAttributes"];
+    }
+    return self;
+}
+
+- (void)encodeWithCoder:(NSCoder *)aCoder {
+    [aCoder encodeObject:self.guestAttributes forKey:@"guestAttributes"];
+}
+
+- (void) setThumbnailFromImage:(UIImage *)image {
     if (self.thumbnailImage) {
         return;
     }
@@ -67,18 +82,18 @@ enum {SMALL_FONT_SIZE = 12, LARGE_FONT_SIZE = 18, THUMBNAIL_WIDTH = 60};
     
     // Cleanup image context resources
     UIGraphicsEndImageContext();
-    NSLog(@"finished drawing image....");
+    NSLog(@"finished drawing image.");
 }
 
--(void) addValue:(NSString *)attrVal forAttribute:(NSString *)attrName {
+- (void) addValue:(NSString *)attrVal forAttribute:(NSString *)attrName {
     [self.guestAttributes setObject:attrVal forKey:attrName];
 }
 
--(id) getValueForAttribute:(NSString *)attribute {
+- (id) getValueForAttribute:(NSString *)attribute {
     return [self.guestAttributes valueForKey:attribute];
 }
 
--(UIImage *) smallSizeUserImage {
+- (UIImage *)smallSizeUserImage {
     NSURL *url = [NSURL URLWithString:[self photoURL]];
     NSData *imageData = [NSData dataWithContentsOfURL:url];
     return [UIImage imageWithData:imageData];
@@ -86,23 +101,23 @@ enum {SMALL_FONT_SIZE = 12, LARGE_FONT_SIZE = 18, THUMBNAIL_WIDTH = 60};
 
 #pragma mark - Guest Attributes
 
--(NSInteger) userID {
+- (NSInteger) userID {
     return [[self getValueForAttribute:@"id"] integerValue];
 }
 
--(NSString *) firstName {
+- (NSString *)firstName {
     return [self getValueForAttribute:@"firstName"];
 }
 
--(NSString *) lastName {
+- (NSString *)lastName {
     return [self getValueForAttribute:@"lastName"];
 }
 
--(NSString *) email {
+- (NSString *)email {
     return [self getValueForAttribute:@"email"];
 }
 
--(NSString *) photoURL {
+- (NSString *)photoURL {
     // return [self getValueForAttribute:@"photo_url"];
     // Currently set to a randomly generated cat photo
     return @"http://lorempixel.com/100/100/cats/";
@@ -110,7 +125,7 @@ enum {SMALL_FONT_SIZE = 12, LARGE_FONT_SIZE = 18, THUMBNAIL_WIDTH = 60};
 
 #pragma mark - Guest Attributed Strings for List Entry
 
--(NSAttributedString *)compose:(NSString *)str withBoldPrefix:(NSString *)prefix {
+- (NSAttributedString *)compose:(NSString *)str withBoldPrefix:(NSString *)prefix {
     NSMutableAttributedString *attributedString = nil;
     
     UIFont *boldFont = [UIFont boldSystemFontOfSize:SMALL_FONT_SIZE];
@@ -139,7 +154,7 @@ enum {SMALL_FONT_SIZE = 12, LARGE_FONT_SIZE = 18, THUMBNAIL_WIDTH = 60};
     return attributedString;
 }
 
--(NSAttributedString *) descriptionForListEntry {
+- (NSAttributedString *)descriptionForListEntry {
     NSMutableAttributedString *name = [[self nameForListEntry] mutableCopy];
     NSMutableAttributedString *email = [[self emailForListEntry] mutableCopy];
     
@@ -150,7 +165,7 @@ enum {SMALL_FONT_SIZE = 12, LARGE_FONT_SIZE = 18, THUMBNAIL_WIDTH = 60};
     return name;
 }
 
--(NSAttributedString *) nameForListEntry {
+- (NSAttributedString *)nameForListEntry {
     UIFont *titleFont = [UIFont boldSystemFontOfSize:LARGE_FONT_SIZE];
     UIColor *foregroundColor = [UIColor blackColor];
     
@@ -164,7 +179,7 @@ enum {SMALL_FONT_SIZE = 12, LARGE_FONT_SIZE = 18, THUMBNAIL_WIDTH = 60};
     return attributedTitleString;
 }
 
--(NSAttributedString *) emailForListEntry {
+- (NSAttributedString *)emailForListEntry {
     NSString *email = [self email];
     return [self compose:email withBoldPrefix:@""];
 }

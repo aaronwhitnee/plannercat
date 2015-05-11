@@ -9,6 +9,6 @@
 #import <UIKit/UIKit.h>
 
 @interface ActivityIndicatorView : UIActivityIndicatorView
--(instancetype) initWithFrame:(CGRect)frame;
+- (instancetype) initWithFrame:(CGRect)frame;
 
 @end

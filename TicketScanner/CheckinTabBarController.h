@@ -16,6 +16,6 @@
 
 @property(nonatomic, strong) Event *activeEvent;
 
--(instancetype) initWithEvent:(Event *)event;
+- (instancetype)initWithEvent:(Event *)event;
 
 @end

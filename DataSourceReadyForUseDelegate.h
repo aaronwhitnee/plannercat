@@ -15,7 +15,7 @@
 
 @required
 
--(void) dataSourceReadyForUse: (id<ConnectionFinishedDelegate>) dataSource;
+- (void) dataSourceReadyForUse: (id<ConnectionFinishedDelegate>) dataSource;
 
 @end
 

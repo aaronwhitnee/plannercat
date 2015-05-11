@@ -16,8 +16,8 @@
 @property(nonatomic) AVCaptureVideoPreviewLayer *videoPreviewLayer;
 @property(nonatomic, weak) id<AVCaptureMetadataOutputObjectsDelegate> delegate;
 
--(instancetype) initVideoViewWithFrame:(CGRect)frame;
--(BOOL) startReading;
--(void) stopReading;
+- (instancetype) initVideoViewWithFrame:(CGRect)frame;
+- (BOOL) startReading;
+- (void) stopReading;
 
 @end

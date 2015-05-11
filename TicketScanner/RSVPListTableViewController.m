@@ -10,7 +10,6 @@
 
 @interface RSVPListTableViewController ()
 
-@property(nonatomic) NSInteger activeEventID;
 @property(nonatomic, strong) GuestsDataSource *guestsDataSource;
 @property(nonatomic, strong) ActivityIndicatorView *activityIndicator;
 
@@ -23,11 +22,10 @@ static NSString *GuestCellID = @"guest";
 
 @implementation RSVPListTableViewController
 
--(instancetype) initWithEventID:(NSInteger)eventID {
+- (instancetype)init {
     self = [super init];
     if (self) {
         [self.tableView registerClass:[UITableViewCell class] forCellReuseIdentifier:GuestCellID];
-        self.activeEventID = eventID;
     }
     return self;
 }
@@ -40,14 +38,14 @@ static NSString *GuestCellID = @"guest";
     [self.refreshControl addTarget:self action:@selector(refreshTableView:) forControlEvents:UIControlEventValueChanged];
 }
 
-- (ActivityIndicatorView *) activityIndicator {
+- (ActivityIndicatorView *)activityIndicator {
     if (!_activityIndicator) {
         _activityIndicator = [[ActivityIndicatorView alloc] initWithFrame:self.view.frame];
     }
     return _activityIndicator;
 }
 
-- (void) refreshTableView:(UIRefreshControl *)sender {
+- (void)refreshTableView:(UIRefreshControl *)sender {
     [self.tableView reloadData];
     [sender endRefreshing];
 }
@@ -59,16 +57,15 @@ static NSString *GuestCellID = @"guest";
 
 #pragma mark - Table view data source
 
--(GuestsDataSource *) guestsDataSource {
+- (GuestsDataSource *)guestsDataSource {
     if (!_guestsDataSource) {
-//        _guestsDataSource = [[GuestsDataSource alloc] initWithGuestsForEvent:self.activeEventID];
         _guestsDataSource = [[GuestsDataSource alloc] initWithGuestsForEvent:8];
         _guestsDataSource.delegate = self;
     }
     return _guestsDataSource;
 }
 
--(void) dataSourceReadyForUse:(GuestsDataSource *) dataSource {
+- (void)dataSourceReadyForUse:(GuestsDataSource *)dataSource {
     [self.tableView reloadData];
     [self.activityIndicator stopAnimating];
 }
@@ -86,7 +83,6 @@ static NSString *GuestCellID = @"guest";
     return [self.guestsDataSource numberOfGuests];
 }
 
-
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath {
     UITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:GuestCellID forIndexPath:indexPath];
     cell = [self guestViewForIndex:[indexPath row] withTableViewCell:cell];
@@ -94,17 +90,17 @@ static NSString *GuestCellID = @"guest";
     return cell;
 }
 
--(CGFloat) tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath {
+- (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath {
     return GUEST_CELL_HEIGHT;
 }
 
--(void) tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath {
+- (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath {
     Guest *selectedGuest = [self.guestsDataSource guestAtIndex:[indexPath row]];
     NSString *guestName = [NSString stringWithFormat:@"%@ %@", [selectedGuest firstName], [selectedGuest lastName]];
     NSLog(@"Selected guest: %@", guestName);
 }
 
--(UITableViewCell *) guestViewForIndex:(NSInteger)rowIndex withTableViewCell:(UITableViewCell *)cell {
+- (UITableViewCell *)guestViewForIndex:(NSInteger)rowIndex withTableViewCell:(UITableViewCell *)cell {
     enum {USER_IMAGE_VIEW_TAG = 100, MAIN_VIEW_TAG = 200, USER_LABEL_TAG = 300};
     
     Guest *guest = [self.guestsDataSource guestAtIndex:(int)rowIndex];
@@ -121,7 +117,7 @@ static NSString *GuestCellID = @"guest";
         for ( UIView *v in subViews )
             [v removeFromSuperview];
         imageView.image = [guest thumbnailImage];
-        UILabel *guestLabel = (UILabel *) [mainView viewWithTag: USER_LABEL_TAG];
+        UILabel *guestLabel = (UILabel *)[mainView viewWithTag: USER_LABEL_TAG];
         guestLabel.attributedText = [guest descriptionForListEntry];
         return cell;
     }

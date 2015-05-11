@@ -19,14 +19,14 @@
 @property(nonatomic) ActivityIndicatorView *activityIndicator;
 @property(nonatomic, strong, readwrite) AVAudioPlayer *whistleSound;
 
--(void) displayAlertWithTitle:(NSString *)title;
+- (void) displayAlertWithTitle:(NSString *)title;
 
 @end
 
 
 @implementation RegistrationFormViewController
 
--(instancetype) initWithEventID:(NSInteger)eventID {
+- (instancetype) initWithEventID:(NSInteger)eventID {
     self = [super init];
     if (self) {
         self.formController.form = [RegistrationForm new];
@@ -35,7 +35,7 @@
     return self;
 }
 
--(void) viewDidLoad {
+- (void) viewDidLoad {
     [super viewDidLoad];
     
     [self.view addSubview:self.activityIndicator];
@@ -47,7 +47,7 @@
     self.tableView.separatorColor = [UIColor blackColor];
 }
 
--(ActivityIndicatorView *) activityIndicator {
+- (ActivityIndicatorView *)activityIndicator {
     if(_activityIndicator) {
         return _activityIndicator;
     }
@@ -58,17 +58,17 @@
 
 # pragma mark - DataSourceReadyForUseDelegate methods
 
--(void)dataSourceReadyForUse:(RegistrationForm *)dataSource {
+- (void)dataSourceReadyForUse:(RegistrationForm *)dataSource {
 }
 
 // Customize table section headers
--(void) tableView:(UITableView *)tableView willDisplayHeaderView:(UIView *)view forSection:(NSInteger)section {
+- (void) tableView:(UITableView *)tableView willDisplayHeaderView:(UIView *)view forSection:(NSInteger)section {
     UITableViewHeaderFooterView *headerView = (UITableViewHeaderFooterView*)view;
     headerView.textLabel.font = [UIFont systemFontOfSize:12 weight:0.5];
     headerView.textLabel.textColor = [UIColor colorWithRed:220/255.0 green:220/255.0 blue:220/255.0 alpha:1.0];
 }
 
--(void) submitRegistrationForm:(UITableViewCell<FXFormFieldCell> *)cell {
+- (void) submitRegistrationForm:(UITableViewCell<FXFormFieldCell> *)cell {
     RegistrationForm *currentForm = cell.field.form;
     NSMutableDictionary *fieldValues = [[NSMutableDictionary alloc] init];
     BOOL formIsValid = YES;
@@ -101,12 +101,12 @@
 
 # pragma mark - ConnectionFinishedDelegate methods
 
--(void) handleServerResponse:(NSDictionary *)response {
+- (void) handleServerResponse:(NSDictionary *)response {
     [self.activityIndicator stopAnimating];
     [self displayAlertWithTitle:@"Check In Successful!"];
 }
 
--(BOOL) validateEmailAddress:(NSString *)emailString {
+- (BOOL) validateEmailAddress:(NSString *)emailString {
     NSString *emailRegex = @"[A-Z0-9a-z._%+-]+@[A-Za-z0-9.-]+\\.[A-Za-z]{2,4}";
     NSPredicate *emailTest = [NSPredicate predicateWithFormat:@"SELF MATCHES %@", emailRegex];
     
@@ -117,7 +117,7 @@
     return YES;
 }
 
--(void) displayAlertWithTitle:(NSString *)title {
+- (void) displayAlertWithTitle:(NSString *)title {
     if ([[UIDevice currentDevice].systemVersion floatValue] < 8.0) {
         self.alertView.title = title;
         [self.alertView show];
@@ -128,7 +128,7 @@
     }
 }
 
--(UIAlertController *) alertController {
+- (UIAlertController *)alertController {
     if (!_alertController) {
         _alertController = [UIAlertController alertControllerWithTitle:nil message:nil
                                                         preferredStyle:UIAlertControllerStyleAlert];
@@ -140,7 +140,7 @@
     return _alertController;
 }
 
--(UIAlertView *) alertView {
+- (UIAlertView *)alertView {
     if (!_alertView) {
         _alertView = [[UIAlertView alloc] initWithTitle:nil
                                                 message:nil

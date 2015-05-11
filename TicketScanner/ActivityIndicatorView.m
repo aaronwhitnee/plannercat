@@ -25,7 +25,7 @@
     return self;
 }
 
--(UIView *) boundingBoxView {
+- (UIView *)boundingBoxView {
     if (_boundingBoxView) {
         return _boundingBoxView;
     }

@@ -21,6 +21,6 @@
 
 @protocol ConnectionFinishedDelegate <NSObject>
 @required
--(void) handleServerResponse:(NSDictionary *)response;
+- (void) handleServerResponse:(NSDictionary *)response;
 @end
 

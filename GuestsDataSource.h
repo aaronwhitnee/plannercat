@@ -11,6 +11,8 @@
 #import "ServerCommunicator.h"
 #import "Guest.h"
 
+#warning Need to convert/save to a persistent data store
+
 @protocol DataSourceReadyForUseDelegate;
 
 @interface GuestsDataSource : NSObject<ConnectionFinishedDelegate>
@@ -18,9 +20,9 @@
 @property(nonatomic, weak) id<DataSourceReadyForUseDelegate> delegate;
 @property(nonatomic) BOOL guestsDataReadyForUse;
 
--(instancetype) initWithGuestsForEvent:(NSInteger)eventID;
--(NSInteger) numberOfGuests;
--(NSMutableArray *) getAllGuests;
--(Guest *) guestAtIndex:(NSInteger)index;
+- (instancetype)initWithGuestsForEvent:(NSInteger)eventID;
+- (NSInteger) numberOfGuests;
+- (NSMutableArray *)getAllGuests;
+- (Guest *)guestAtIndex:(NSInteger)index;
 
 @end

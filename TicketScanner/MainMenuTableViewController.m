@@ -12,6 +12,8 @@
 
 @property(nonatomic) NSArray *menuItemLabels;
 @property(nonatomic) UIBarButtonItem *settingsBarButton;
+@property(nonatomic, strong) ManagedEventsTableViewController *userEventsTableView;
+@property(nonatomic, strong) TicketsTableViewController *userTicketsTableView;
 
 @end
 
@@ -31,7 +33,21 @@ enum {MENU_ITEM_HEIGHT = 90, MENU_FONT_SIZE = 20};
     self.navigationItem.hidesBackButton = YES;
 }
 
-- (NSArray *) menuItemLabels {
+- (ManagedEventsTableViewController *)userEventsTableView {
+    if (!_userEventsTableView) {
+        _userEventsTableView = [ManagedEventsTableViewController new];
+    }
+    return _userEventsTableView;
+}
+
+- (TicketsTableViewController *)userTicketsTableView {
+    if (!_userTicketsTableView) {
+        _userTicketsTableView = [TicketsTableViewController new];
+    }
+    return _userTicketsTableView;
+}
+
+- (NSArray *)menuItemLabels {
     if (!_menuItemLabels) {
         _menuItemLabels = [NSArray arrayWithObjects:@"My Events", @"My Tickets", nil];
     }
@@ -39,7 +55,7 @@ enum {MENU_ITEM_HEIGHT = 90, MENU_FONT_SIZE = 20};
 }
 
 // TODO: create a new settingsBarButton class to be shared by all views that want it
-- (UIBarButtonItem *) settingsBarButton {
+- (UIBarButtonItem *)settingsBarButton {
     if (!_settingsBarButton) {
         _settingsBarButton = [[UIBarButtonItem alloc] initWithTitle:@"Settings" style:UIBarButtonItemStylePlain target:self action:@selector(didTapSettingsBarButton:)];
     }
@@ -82,13 +98,11 @@ enum {MENU_ITEM_HEIGHT = 90, MENU_FONT_SIZE = 20};
 
 - (void) tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath {
     if ([[self.menuItemLabels objectAtIndex:[indexPath row]] isEqualToString:@"My Events"]) {
-        ManagedEventsTableViewController *myEvents = [[ManagedEventsTableViewController alloc] init];
-        [self.navigationController pushViewController:myEvents animated:YES];
+        [self.navigationController pushViewController:self.userEventsTableView animated:YES];
     }
-//    else if ([[self.menuItemLabels objectAtIndex:[indexPath row]] isEqualToString:@"My Tickets"]) {
-//        TicketsTableViewController *myTickets = [[TicketsTableViewController alloc] init];
-//        [self.navigationController pushViewController:myTickets animated:YES];
-//    }
+    else if ([[self.menuItemLabels objectAtIndex:[indexPath row]] isEqualToString:@"My Tickets"]) {
+        [self.navigationController pushViewController:self.userTicketsTableView animated:YES];
+    }
 }
 
 @end

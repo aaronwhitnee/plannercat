@@ -10,8 +10,10 @@
 
 @interface RegistrationForm()
 
+#warning move currentEventID to external CurrentEventInfo singleton
 @property(nonatomic) NSNumber *currentEventID;
 @property(nonatomic, strong) NSDictionary *currentEventInfo;
+
 @property(nonatomic, strong) NSDictionary *registrationFormJSON;
 @property(nonatomic, strong) ServerCommunicator *webServer;
 
@@ -19,7 +21,7 @@
 
 @implementation RegistrationForm
 
--(instancetype) initWithFormForEvent:(NSInteger)eventID {
+- (instancetype) initWithFormForEvent:(NSInteger)eventID {
     self = [super init];
     if (self) {
         self.currentEventID = [NSNumber numberWithInteger:eventID];
@@ -29,14 +31,14 @@
 }
 
 
--(NSDictionary *) currentEventInfo {
+- (NSDictionary *)currentEventInfo {
     if (!_currentEventInfo) {
         _currentEventInfo = [NSDictionary dictionaryWithObjects:@[self.currentEventID] forKeys:@[@"eventID"]];
     }
     return _currentEventInfo;
 }
 
-- (ServerCommunicator *) webServer {
+- (ServerCommunicator *)webServer {
     if (!_webServer) {
         _webServer = [[ServerCommunicator alloc] init];
         _webServer.delegate = self;
@@ -46,7 +48,7 @@
 
 # pragma mark - ConnectionFinisehdDelegateMethods
 
--(void)handleServerResponse:(NSDictionary *)response {
+- (void)handleServerResponse:(NSDictionary *)response {
     NSError *jsonError;
     NSString *formJsonString = [response valueForKey:@"eventsJsonString"];
     NSData *eventsData = [formJsonString dataUsingEncoding:NSUTF8StringEncoding];
@@ -64,46 +66,46 @@
     }
 }
 
-//- (NSArray *) fields {
-//    
-//    NSMutableArray *fieldsArray = [[NSMutableArray alloc] init];
-//    
-//    [fieldsArray addObject: @{FXFormFieldKey: @"firstName",
-//                              FXFormFieldPlaceholder: @"First Name",
-//                              FXFormFieldTitle: @"",
-//                              FXFormFieldHeader: @"Student Name",
-//                              FXFormFieldDefaultValue: @"",
-//                              FXFormFieldType: FXFormFieldTypeText,
-//                              @"backgroundColor": [UIColor colorWithRed:0 green:0 blue:0 alpha:0.4],
-//                              @"textColor": [UIColor whiteColor]}];
-//    
-//    [fieldsArray addObject: @{FXFormFieldKey: @"lastName",
-//                              FXFormFieldPlaceholder: @"Last Name",
-//                              FXFormFieldTitle: @"",
-//                              FXFormFieldDefaultValue: @"",
-//                              FXFormFieldType: FXFormFieldTypeText,
-//                              @"backgroundColor": [UIColor colorWithRed:0 green:0 blue:0 alpha:0.4]}];
-//    
-//    [fieldsArray addObject: @{FXFormFieldKey: @"email",
-//                              FXFormFieldPlaceholder: @"example@domain.com",
-//                              FXFormFieldTitle: @"",
-//                              FXFormFieldHeader: @"Email Address",
-//                              FXFormFieldDefaultValue: @"",
-//                              FXFormFieldType: FXFormFieldTypeEmail,
-//                              @"backgroundColor": [UIColor colorWithRed:0 green:0 blue:0 alpha:0.4]}];
-//    
-//    [fieldsArray addObject: @{FXFormFieldKey: @"enrollmentType",
-//                              FXFormFieldTitle: @"",
-//                              FXFormFieldHeader: @"Freshman or Transfer?",
-//                              FXFormFieldOptions: @[@"Freshman", @"Transfer"],
-//                              FXFormFieldDefaultValue: @"",
-//                              FXFormFieldCell: [FXFormOptionSegmentsCell class],
-//                              @"backgroundColor": [UIColor colorWithRed:0 green:0 blue:0 alpha:0.4]}];
-//    
-//    return fieldsArray;
-//}
+- (NSArray *)fields {
+    
+    NSMutableArray *fieldsArray = [[NSMutableArray alloc] init];
+    
+    [fieldsArray addObject: @{FXFormFieldKey: @"firstName",
+                              FXFormFieldPlaceholder: @"First Name",
+                              FXFormFieldTitle: @"",
+                              FXFormFieldHeader: @"Student Name",
+                              FXFormFieldDefaultValue: @"",
+                              FXFormFieldType: FXFormFieldTypeText,
+                              @"backgroundColor": [UIColor colorWithRed:0 green:0 blue:0 alpha:0.4],
+                              @"textColor": [UIColor whiteColor]}];
+    
+    [fieldsArray addObject: @{FXFormFieldKey: @"lastName",
+                              FXFormFieldPlaceholder: @"Last Name",
+                              FXFormFieldTitle: @"",
+                              FXFormFieldDefaultValue: @"",
+                              FXFormFieldType: FXFormFieldTypeText,
+                              @"backgroundColor": [UIColor colorWithRed:0 green:0 blue:0 alpha:0.4]}];
+    
+    [fieldsArray addObject: @{FXFormFieldKey: @"email",
+                              FXFormFieldPlaceholder: @"example@domain.com",
+                              FXFormFieldTitle: @"",
+                              FXFormFieldHeader: @"Email Address",
+                              FXFormFieldDefaultValue: @"",
+                              FXFormFieldType: FXFormFieldTypeEmail,
+                              @"backgroundColor": [UIColor colorWithRed:0 green:0 blue:0 alpha:0.4]}];
+    
+    [fieldsArray addObject: @{FXFormFieldKey: @"enrollmentType",
+                              FXFormFieldTitle: @"",
+                              FXFormFieldHeader: @"Freshman or Transfer?",
+                              FXFormFieldOptions: @[@"Freshman", @"Transfer"],
+                              FXFormFieldDefaultValue: @"",
+                              FXFormFieldCell: [FXFormOptionSegmentsCell class],
+                              @"backgroundColor": [UIColor colorWithRed:0 green:0 blue:0 alpha:0.4]}];
+    
+    return fieldsArray;
+}
 
--(NSArray *) extraFields {
+- (NSArray *)extraFields {
     return @[
              @{FXFormFieldTitle: @"SUBMIT",
                FXFormFieldHeader: @"",

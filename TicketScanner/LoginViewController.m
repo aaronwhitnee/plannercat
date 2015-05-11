@@ -75,7 +75,7 @@ enum {FIELD_WIDTH = 250, FIELD_HEIGHT = 60, BUTTON_FONT_SIZE = 16, TITLE_FONT_SI
 #pragma mark - ConnectionFinishedDelegate protocol method
 
 // Check response for valid login
--(void) handleServerResponse:(NSDictionary *)response {
+- (void) handleServerResponse:(NSDictionary *)response {
     self.submitButton.alpha = 1.0;
     self.submitButton.userInteractionEnabled = YES;
 
@@ -83,9 +83,9 @@ enum {FIELD_WIDTH = 250, FIELD_HEIGHT = 60, BUTTON_FONT_SIZE = 16, TITLE_FONT_SI
     if ([[response valueForKey:@"valid"] integerValue] == 1 &&
         [[response valueForKey:@"status"] isEqualToString:@"ok"]) {
         NSLog(@"Login successful!");
-        NSInteger userId = [[response valueForKey:@"userID"] integerValue];
+        NSInteger userID = [[response valueForKey:@"userID"] integerValue];
         NSString *userEmail = [response valueForKey:@"email"];
-        [[NSUserDefaults standardUserDefaults] setValue:@(userId) forKey:@"appUserID"];
+        [[NSUserDefaults standardUserDefaults] setValue:@(userID) forKey:@"appUserID"];
         [[NSUserDefaults standardUserDefaults] setValue:userEmail forKey:@"appUserEmail"];
         
         [self clearTextFields];
@@ -106,7 +106,7 @@ enum {FIELD_WIDTH = 250, FIELD_HEIGHT = 60, BUTTON_FONT_SIZE = 16, TITLE_FONT_SI
     }
 }
 
-- (ServerCommunicator *) webServer {
+- (ServerCommunicator *)webServer {
     if (!_webServer) {
         _webServer = [[ServerCommunicator alloc] init];
         _webServer.delegate = self;
@@ -123,7 +123,7 @@ enum {FIELD_WIDTH = 250, FIELD_HEIGHT = 60, BUTTON_FONT_SIZE = 16, TITLE_FONT_SI
 
 # pragma mark - UI Alerts
 
--(void) displayAlertWithTitle:(NSString *)title {
+- (void) displayAlertWithTitle:(NSString *)title {
     if ([[UIDevice currentDevice].systemVersion floatValue] < 8.0) {
         self.alertView.title = title;
         [self.alertView show];
@@ -134,7 +134,7 @@ enum {FIELD_WIDTH = 250, FIELD_HEIGHT = 60, BUTTON_FONT_SIZE = 16, TITLE_FONT_SI
     }
 }
 
--(UIAlertController *) alertController {
+- (UIAlertController *)alertController {
     if (!_alertController) {
         _alertController = [UIAlertController alertControllerWithTitle:nil message:nil
                                                         preferredStyle:UIAlertControllerStyleAlert];
@@ -146,7 +146,7 @@ enum {FIELD_WIDTH = 250, FIELD_HEIGHT = 60, BUTTON_FONT_SIZE = 16, TITLE_FONT_SI
     return _alertController;
 }
 
--(UIAlertView *) alertView {
+- (UIAlertView *)alertView {
     if (!_alertView) {
         _alertView = [[UIAlertView alloc] initWithTitle:nil
                                                 message:nil
@@ -159,16 +159,16 @@ enum {FIELD_WIDTH = 250, FIELD_HEIGHT = 60, BUTTON_FONT_SIZE = 16, TITLE_FONT_SI
 
 # pragma mark - UITextFields and UITextFieldDelegate methods
 
--(void) textFieldDidBeginEditing:(UITextField *)textField {
+- (void) textFieldDidBeginEditing:(UITextField *)textField {
     self.activeField = textField;
 }
 
--(void) textFieldDidEndEditing:(UITextField *)textField {
+- (void) textFieldDidEndEditing:(UITextField *)textField {
     self.activeField = nil;
     [textField resignFirstResponder];
 }
 
--(void) clearTextFields {
+- (void) clearTextFields {
     self.userEmailField.text = nil;
     self.userPasswordField.text = nil;
     if (self.activeField) {
@@ -176,14 +176,14 @@ enum {FIELD_WIDTH = 250, FIELD_HEIGHT = 60, BUTTON_FONT_SIZE = 16, TITLE_FONT_SI
     }
 }
 
--(BOOL) textFieldShouldReturn:(UITextField *)textField {
+- (BOOL) textFieldShouldReturn:(UITextField *)textField {
     if (textField == self.userEmailField) {
         [self.userPasswordField becomeFirstResponder];
     }
     return NO;
 }
 
-- (UITextField *) userEmailField {
+- (UITextField *)userEmailField {
     if (!_userEmailField) {
         CGRect frame = CGRectMake(0, 0, FIELD_WIDTH, FIELD_HEIGHT);
         _userEmailField = [[UITextField alloc] initWithFrame:frame];
@@ -204,7 +204,7 @@ enum {FIELD_WIDTH = 250, FIELD_HEIGHT = 60, BUTTON_FONT_SIZE = 16, TITLE_FONT_SI
     return _userEmailField;
 }
 
-- (UITextField *) userPasswordField {
+- (UITextField *)userPasswordField {
     if (!_userPasswordField) {
         CGRect frame = CGRectMake(0, 0, FIELD_WIDTH, FIELD_HEIGHT);
         _userPasswordField = [[UITextField alloc] initWithFrame:frame];
@@ -225,7 +225,7 @@ enum {FIELD_WIDTH = 250, FIELD_HEIGHT = 60, BUTTON_FONT_SIZE = 16, TITLE_FONT_SI
     return _userPasswordField;
 }
 
-- (UIButton *) submitButton {
+- (UIButton *)submitButton {
     if (!_submitButton) {
         CGRect buttonFrame = CGRectMake((self.view.frame.size.width - FIELD_WIDTH) / 2.0, CGRectGetMaxY(self.userPasswordField.frame) + 20,
                                         FIELD_WIDTH, 40);
@@ -264,7 +264,7 @@ enum {FIELD_WIDTH = 250, FIELD_HEIGHT = 60, BUTTON_FONT_SIZE = 16, TITLE_FONT_SI
                                                   object:nil];
 }
 
--(void)keyboardWasShown:(NSNotification *)notification {
+- (void)keyboardWasShown:(NSNotification *)notification {
     NSDictionary* info = [notification userInfo];
     CGSize keyboardSize = [[info objectForKey:UIKeyboardFrameBeginUserInfoKey] CGRectValue].size;
     CGPoint buttonOrigin = self.submitButton.frame.origin;

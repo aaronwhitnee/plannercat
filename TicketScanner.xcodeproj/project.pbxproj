@@ -17,7 +17,6 @@
 		0C34386D1AA93E8B002E1ED5 /* ServerCommunicator.m in Sources */ = {isa = PBXBuildFile; fileRef = 0C34386C1AA93E8B002E1ED5 /* ServerCommunicator.m */; };
 		0C4CEBFA1AFC25D70000F2E3 /* GuestsDataSource.m in Sources */ = {isa = PBXBuildFile; fileRef = 0C4CEBF91AFC25D70000F2E3 /* GuestsDataSource.m */; };
 		0C4CEBFD1AFC279B0000F2E3 /* Guest.m in Sources */ = {isa = PBXBuildFile; fileRef = 0C4CEBFC1AFC279B0000F2E3 /* Guest.m */; };
-		0C4CEC031AFC9F3D0000F2E3 /* FormField.m in Sources */ = {isa = PBXBuildFile; fileRef = 0C4CEC021AFC9F3D0000F2E3 /* FormField.m */; };
 		0C855A9F1AB519CB0058D450 /* CheckinTabBarController.m in Sources */ = {isa = PBXBuildFile; fileRef = 0C855A9E1AB519CB0058D450 /* CheckinTabBarController.m */; };
 		0C855AA11AB56B100058D450 /* whistle.wav in Resources */ = {isa = PBXBuildFile; fileRef = 0C855AA01AB56B100058D450 /* whistle.wav */; };
 		0C88618D1ABB9C86002954F4 /* AudioToolbox.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 0C88618C1ABB9C86002954F4 /* AudioToolbox.framework */; };
@@ -77,8 +76,6 @@
 		0C4CEBF91AFC25D70000F2E3 /* GuestsDataSource.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GuestsDataSource.m; sourceTree = "<group>"; };
 		0C4CEBFB1AFC279B0000F2E3 /* Guest.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Guest.h; sourceTree = "<group>"; };
 		0C4CEBFC1AFC279B0000F2E3 /* Guest.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Guest.m; sourceTree = "<group>"; };
-		0C4CEC011AFC9F3D0000F2E3 /* FormField.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FormField.h; sourceTree = "<group>"; };
-		0C4CEC021AFC9F3D0000F2E3 /* FormField.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FormField.m; sourceTree = "<group>"; };
 		0C855A9D1AB519CB0058D450 /* CheckinTabBarController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CheckinTabBarController.h; sourceTree = "<group>"; };
 		0C855A9E1AB519CB0058D450 /* CheckinTabBarController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CheckinTabBarController.m; sourceTree = "<group>"; };
 		0C855AA01AB56B100058D450 /* whistle.wav */ = {isa = PBXFileReference; lastKnownFileType = audio.wav; path = whistle.wav; sourceTree = "<group>"; };
@@ -321,8 +318,6 @@
 				0C4CEBFC1AFC279B0000F2E3 /* Guest.m */,
 				0C93F9D51AF9ABE500EC3735 /* Ticket.h */,
 				0C93F9D61AF9ABE500EC3735 /* Ticket.m */,
-				0C4CEC011AFC9F3D0000F2E3 /* FormField.h */,
-				0C4CEC021AFC9F3D0000F2E3 /* FormField.m */,
 				0C34386B1AA93E8B002E1ED5 /* ServerCommunicator.h */,
 				0C34386C1AA93E8B002E1ED5 /* ServerCommunicator.m */,
 			);
@@ -466,7 +461,6 @@
 				0C34386D1AA93E8B002E1ED5 /* ServerCommunicator.m in Sources */,
 				0C1741DB1AF8972D00C9269A /* SettingsTableViewController.m in Sources */,
 				0C265C021AF6B24A00508A26 /* LoginViewController.m in Sources */,
-				0C4CEC031AFC9F3D0000F2E3 /* FormField.m in Sources */,
 				0C93F9E21AFA08D500EC3735 /* RSVPListTableViewController.m in Sources */,
 				0C4CEBFD1AFC279B0000F2E3 /* Guest.m in Sources */,
 				0CA73F791AAB92640049060D /* QRCodeCaptureView.m in Sources */,

@@ -20,14 +20,14 @@
 
 @implementation ServerCommunicator
 
-- (NSMutableData *) receivedData {
+- (NSMutableData *)receivedData {
     if (!_receivedData) {
         _receivedData = [NSMutableData new];
     }
     return _receivedData;
 }
 
-- (NSDictionary *) jsonResponse {
+- (NSDictionary *)jsonResponse {
     if (!_jsonResponse) {
         _jsonResponse = [NSDictionary new];
     }
@@ -62,7 +62,7 @@
     self.connection = [[NSURLConnection alloc] initWithRequest:self.request delegate:self startImmediately:YES];
 }
 
--(void) connection:(NSURLConnection *)connection didReceiveResponse:(NSURLResponse *)response {
+- (void) connection:(NSURLConnection *)connection didReceiveResponse:(NSURLResponse *)response {
     NSLog(@"%s: %@", __func__, response);
     self.jsonResponse = nil;
     self.receivedData = nil;
@@ -87,13 +87,13 @@
     }
 }
 
--(void)connection:(NSURLConnection *)connection didFailWithError:(NSError *)error {
+- (void)connection:(NSURLConnection *)connection didFailWithError:(NSError *)error {
     NSLog(@"Connection Failed: %@", error);
     self.jsonResponse = nil;
     self.receivedData = nil;
 }
 
--(NSDictionary *) generateJSONWithReceivedData {
+- (NSDictionary *)generateJSONWithReceivedData {
     if (self.receivedData == nil) {
         return nil;
     }

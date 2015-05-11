@@ -9,21 +9,21 @@
 #import <UIKit/UIKit.h>
 #import <Foundation/Foundation.h>
 
-@interface Event : NSObject
+@interface Event : NSObject <NSCoding>
 
--(instancetype) initWithDictionary:(NSDictionary *) eventDictionary;
+- (instancetype)initWithDictionary:(NSDictionary *)eventDictionary;
 
--(void) addValue:(NSString *)attrVal forAttribute:(NSString *)attrName;
--(id) getValueForAttribute:(NSString *)attribute;
+- (void)addValue:(NSString *)attrVal forAttribute:(NSString *)attrName;
+- (id)getValueForAttribute:(NSString *)attribute;
 
--(NSAttributedString *)descriptionForListEntry;
+- (NSAttributedString *)descriptionForListEntry;
 
--(NSInteger) eventID;
--(NSString *) title;
--(NSString *) venueName;
--(NSString *) startDate;
--(NSString *) endDate;
--(NSString *) description;
--(NSString *) eventType;
+- (NSInteger)eventID;
+- (NSString *)title;
+- (NSString *)venueName;
+- (NSString *)startDate;
+- (NSString *)endDate;
+- (NSString *)eventDescription;
+- (NSString *)eventType;
 
 @end

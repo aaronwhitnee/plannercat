@@ -10,7 +10,6 @@
 
 @interface ManagedEventsTableViewController ()
 
-@property(nonatomic, strong) Event *selectedEvent;
 @property(nonatomic, strong) EventsDataSource *eventsDataSource;
 @property(nonatomic, strong) ActivityIndicatorView *activityIndicator;
 @property(nonatomic, strong) CheckinTabBarController *eventController;
@@ -39,37 +38,36 @@ enum { EVENT_CELL_HEIGHT = 100, GAP_BTWN_VIEWS = 5, IMAGE_HEIGHT = 0, IMAGE_WIDT
     // Dispose of any resources that can be recreated.
 }
 
--(CheckinTabBarController *) eventController {
+- (CheckinTabBarController *)eventController {
     if (!_eventController) {
-        _eventController = [[CheckinTabBarController alloc] initWithEvent:self.selectedEvent];
+        _eventController = [[CheckinTabBarController alloc] init];
     }
     return _eventController;
 }
 
-- (ActivityIndicatorView *) activityIndicator {
+- (ActivityIndicatorView *)activityIndicator {
     if (!_activityIndicator) {
         _activityIndicator = [[ActivityIndicatorView alloc] initWithFrame:self.view.frame];
     }
     return _activityIndicator;
 }
 
-- (void) refreshTableView: (UIRefreshControl *) sender {
+- (void)refreshTableView:(UIRefreshControl *)sender {
     [self.tableView reloadData];
     [sender endRefreshing];
 }
 
 #pragma mark - Table view data source
 
-- (EventsDataSource *) eventsDataSource {
+- (EventsDataSource *)eventsDataSource {
     if (!_eventsDataSource) {
-        NSInteger userID = [[[NSUserDefaults standardUserDefaults] valueForKey:@"appUserID"] integerValue];
-        _eventsDataSource = [[EventsDataSource alloc] initWithEventsManagedByUser:userID];
+        _eventsDataSource = [[EventsDataSource alloc] init];
         _eventsDataSource.delegate = self;
     }
     return _eventsDataSource;
 }
 
--(void) dataSourceReadyForUse:(EventsDataSource *)dataSource {
+- (void)dataSourceReadyForUse:(EventsDataSource *)dataSource {
     [self.tableView reloadData];
     [self.activityIndicator stopAnimating];
 }
@@ -94,16 +92,15 @@ enum { EVENT_CELL_HEIGHT = 100, GAP_BTWN_VIEWS = 5, IMAGE_HEIGHT = 0, IMAGE_WIDT
     return cell;
 }
 
--(CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath {
+- (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath {
     return EVENT_CELL_HEIGHT;
 }
 
-- (void) tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath {
-    self.selectedEvent = [self.eventsDataSource eventAtIndex:[indexPath row]];
+- (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath {
     [self.navigationController pushViewController:self.eventController animated:YES];
 }
 
-- (UITableViewCell *) eventViewForIndex:(NSInteger)rowIndex withTableViewCell:(UITableViewCell *) cell {
+- (UITableViewCell *)eventViewForIndex:(NSInteger)rowIndex withTableViewCell:(UITableViewCell *)cell {
     enum {MAIN_VIEW_TAG = 100, EVENT_LABEL_TAG = 200};
     
     Event *event = [self.eventsDataSource eventAtIndex:(int)rowIndex];
@@ -116,7 +113,7 @@ enum { EVENT_CELL_HEIGHT = 100, GAP_BTWN_VIEWS = 5, IMAGE_HEIGHT = 0, IMAGE_WIDT
         //        for( UIView *v in views )
         //            [v removeFromSuperview];
         //        iv.image = [theater imageForListEntry];
-        UILabel *eventLabel = (UILabel *) [view viewWithTag: EVENT_LABEL_TAG];
+        UILabel *eventLabel = (UILabel *)[view viewWithTag: EVENT_LABEL_TAG];
         eventLabel.attributedText = [event descriptionForListEntry];
         return cell;
     }

@@ -47,12 +47,12 @@
     [self.view addSubview:self.lastNameLabel];
 }
 
--(void) viewDidAppear:(BOOL)animated {
+- (void) viewDidAppear:(BOOL)animated {
     [super viewDidAppear:animated];
     [self.scannerView startReading];
 }
 
--(void) viewDidDisappear:(BOOL)animated {
+- (void) viewDidDisappear:(BOOL)animated {
     [super viewDidDisappear:animated];
     [self.scannerView stopReading];
 }
@@ -62,7 +62,7 @@
     // Dispose of any resources that can be recreated.
 }
 
-- (ServerCommunicator *) webServer {
+- (ServerCommunicator *)webServer {
     if (!_webServer) {
         _webServer = [[ServerCommunicator alloc] init];
         _webServer.delegate = self;
@@ -70,7 +70,7 @@
     return _webServer;
 }
 
-//-(UIButton *) startStopButton {
+//- (UIButton *)startStopButton {
 //    if (_startStopButton) {
 //        return _startStopButton;
 //    }
@@ -89,7 +89,7 @@
 //    return _startStopButton;
 //}
 
--(UILabel *) firstNameLabel {
+- (UILabel *)firstNameLabel {
     if (_firstNameLabel) {
         return _firstNameLabel;
     }
@@ -102,7 +102,7 @@
     return _firstNameLabel;
 }
 
--(UILabel *) lastNameLabel {
+- (UILabel *)lastNameLabel {
     if (_lastNameLabel) {
         return _lastNameLabel;
     }
@@ -115,7 +115,7 @@
     return _lastNameLabel;
 }
 
-//-(void) startStopReading {
+//- (void) startStopReading {
 //    if (!self.scannerView.isReading) {
 //        if ([self.scannerView startReading]) {
 ////            self.startStopButton.alpha = 0.2;
@@ -129,7 +129,7 @@
 //    }
 //}
 
--(void) handleServerResponse:(NSDictionary *)response {
+- (void) handleServerResponse:(NSDictionary *)response {
     // notify user if ticket is valid/invalid
     [self playWhistleSound];
     NSLog(@"Scanned data uploaded to database successfully.");
@@ -139,7 +139,7 @@
 
 # pragma mark - AVCaptureMetadataOutputObjectsDelegate method
 
--(void) captureOutput:(AVCaptureOutput *)captureOutput didOutputMetadataObjects:(NSArray *)metadataObjects
+- (void) captureOutput:(AVCaptureOutput *)captureOutput didOutputMetadataObjects:(NSArray *)metadataObjects
        fromConnection:(AVCaptureConnection *)connection {
     // TODO: play "beep" sound for valid/successful scan here...
     [self.scannerView stopReading];
@@ -153,7 +153,7 @@
     }
 }
 
--(NSDictionary *) generateJSONWithScannedData:(NSArray *)metadata {
+- (NSDictionary *)generateJSONWithScannedData:(NSArray *)metadata {
     if ([metadata count] != 1) {
         return nil;
     }
@@ -182,7 +182,7 @@
     return _whistleSound;
 }
 
--(void) playWhistleSound {
+- (void) playWhistleSound {
     [self.whistleSound prepareToPlay];
     [self.whistleSound play];
 }

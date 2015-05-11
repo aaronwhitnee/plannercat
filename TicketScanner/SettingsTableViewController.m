@@ -31,7 +31,7 @@ static NSString *SettingsCellID = @"SettingsCell";
 
 #pragma mark - Table view data source
 
-- (NSArray *) settings {
+- (NSArray *)settings {
     if (!_settings) {
         _settings = [NSArray arrayWithObjects:@"Log Out", nil];
     }

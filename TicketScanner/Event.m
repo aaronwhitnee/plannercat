@@ -18,7 +18,7 @@ enum {SMALL_FONT_SIZE = 12, LARGE_FONT_SIZE = 18};
 
 @implementation Event
 
--(instancetype) initWithDictionary:(NSDictionary *)eventDictionary {
+- (instancetype)initWithDictionary:(NSDictionary *)eventDictionary {
     self = [super init];
     if (self) {
         self.eventAttributes = [NSMutableDictionary dictionaryWithDictionary:eventDictionary];
@@ -26,47 +26,61 @@ enum {SMALL_FONT_SIZE = 12, LARGE_FONT_SIZE = 18};
     return self;
 }
 
--(void) addValue:(NSString *)attrVal forAttribute:(NSString *)attrName {
-    [self.eventAttributes setObject:attrVal forKey:attrName];
+#pragma mark - NSCoding Archiving methods
+
+- (instancetype)initWithCoder:(NSCoder *)aDecoder {
+    self = [super init];
+    if (self) {
+        _eventAttributes = [aDecoder decodeObjectForKey:@"eventAttributes"];
+    }
+    return self;
 }
 
--(id) getValueForAttribute:(NSString *)attribute {
-    return [self.eventAttributes valueForKey:attribute];
+- (void)encodeWithCoder:(NSCoder *)aCoder {
+    [aCoder encodeObject:self.eventAttributes forKey:@"eventAttributes"];
 }
 
 #pragma mark - Event Attributes
 
--(NSInteger) eventID {
+- (void)addValue:(NSString *)attrVal forAttribute:(NSString *)attrName {
+    [self.eventAttributes setObject:attrVal forKey:attrName];
+}
+
+- (id)getValueForAttribute:(NSString *)attribute {
+    return [self.eventAttributes valueForKey:attribute];
+}
+
+- (NSInteger)eventID {
     return [[self getValueForAttribute:@"id"] integerValue];
 }
 
--(NSString *) title {
+- (NSString *)title {
     return [self getValueForAttribute:@"event_title"];
 }
 
--(NSString *) venueName {
+- (NSString *)venueName {
     return [self getValueForAttribute:@"venue"];
 }
 
--(NSString *) startDate {
+- (NSString *)startDate {
     return [self getValueForAttribute:@"start_date"];
 }
 
--(NSString *) endDate {
+- (NSString *)endDate {
     return [self getValueForAttribute:@"end_date"];
 }
 
--(NSString *) description {
+- (NSString *)eventDescription {
     return [self getValueForAttribute:@"description"];
 }
 
--(NSString *) eventType {
+- (NSString *)eventType {
     return [self getValueForAttribute:@"event_type"];
 }
 
 #pragma mark - Event Attributed Strings for List Entry
 
--(NSAttributedString *)compose:(NSString *)str withBoldPrefix:(NSString *)prefix {
+- (NSAttributedString *)compose:(NSString *)str withBoldPrefix:(NSString *)prefix {
     NSMutableAttributedString *attributedString = nil;
     
     UIFont *boldFont = [UIFont boldSystemFontOfSize:SMALL_FONT_SIZE];
@@ -95,7 +109,7 @@ enum {SMALL_FONT_SIZE = 12, LARGE_FONT_SIZE = 18};
     return attributedString;
 }
 
--(NSAttributedString *) descriptionForListEntry {
+- (NSAttributedString *)descriptionForListEntry {
     NSMutableAttributedString *title = [[self titleForListEntry] mutableCopy];
     NSMutableAttributedString *time = [[self timeForListEntry] mutableCopy];
     NSMutableAttributedString *location = [[self locationForListEntry] mutableCopy];
@@ -108,7 +122,7 @@ enum {SMALL_FONT_SIZE = 12, LARGE_FONT_SIZE = 18};
     return title;
 }
 
--(NSAttributedString *) titleForListEntry {
+- (NSAttributedString *)titleForListEntry {
     UIFont *titleFont = [UIFont boldSystemFontOfSize:LARGE_FONT_SIZE];
     UIColor *foregroundColor = [UIColor blackColor];
     
@@ -121,12 +135,12 @@ enum {SMALL_FONT_SIZE = 12, LARGE_FONT_SIZE = 18};
     return attributedTitleString;
 }
 
--(NSAttributedString *) timeForListEntry {
+- (NSAttributedString *)timeForListEntry {
     NSString *time = [self startDate];
     return [self compose:time withBoldPrefix:@""];
 }
 
--(NSAttributedString *) locationForListEntry {
+- (NSAttributedString *)locationForListEntry {
     NSString *location = [self venueName];
     return [self compose:location withBoldPrefix:@""];
 }

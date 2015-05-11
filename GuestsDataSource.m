@@ -10,8 +10,10 @@
 
 @interface GuestsDataSource()
 
+#warning move currentEventID to external CurrentEventInfo singleton
 @property(nonatomic, strong) NSNumber *currentEventID;
 @property(nonatomic, strong) NSDictionary *currentEventInfo;
+
 @property(nonatomic, strong) NSDictionary *guestsJSON;
 @property(nonatomic, strong) NSMutableArray *allGuests;
 @property(nonatomic, strong) ServerCommunicator *webServer;
@@ -20,7 +22,7 @@
 
 @implementation GuestsDataSource
 
--(instancetype) initWithGuestsForEvent:(NSInteger)eventID {
+- (instancetype) initWithGuestsForEvent:(NSInteger)eventID {
     self = [super init];
     if (self) {
         self.currentEventID = [NSNumber numberWithInteger:eventID];
@@ -31,36 +33,36 @@
     return self;
 }
 
-- (NSDictionary *) currentEventInfo {
+- (NSDictionary *)currentEventInfo {
     if (!_currentEventInfo) {
         _currentEventInfo = [NSDictionary dictionaryWithObjects:@[self.currentEventID] forKeys:@[@"eventID"]];
     }
     return _currentEventInfo;
 }
 
--(NSInteger) numberOfGuests {
+- (NSInteger) numberOfGuests {
     return [self.allGuests count];
 }
 
--(NSMutableArray *) getAllGuests {
+- (NSMutableArray *)getAllGuests {
     return self.allGuests;
 }
 
-- (NSMutableArray *) allGuests {
+- (NSMutableArray *)allGuests {
     if (!_allGuests) {
         _allGuests = [NSMutableArray new];
     }
     return _allGuests;
 }
 
--(Guest *) guestAtIndex:(NSInteger)index {
+- (Guest *)guestAtIndex:(NSInteger)index {
     if (index >= [self.allGuests count]) {
         return nil;
     }
     return [self.allGuests objectAtIndex:index];
 }
 
-- (ServerCommunicator *) webServer {
+- (ServerCommunicator *)webServer {
     if (!_webServer) {
         _webServer = [[ServerCommunicator alloc] init];
         _webServer.delegate = self;
@@ -70,7 +72,7 @@
 
 #pragma mark - ConnectionFinishedDelegate methods
 
--(void)handleServerResponse:(NSDictionary *)response {
+- (void)handleServerResponse:(NSDictionary *)response {
     NSError *jsonError;
     NSString *eventsJSONString = [response valueForKey:@"guestsJsonString"];
     NSData *eventsData = [eventsJSONString dataUsingEncoding:NSUTF8StringEncoding];
@@ -88,7 +90,7 @@
     }
 }
 
--(void) processGuestsJSON {
+- (void) processGuestsJSON {
     for (NSDictionary *guestTuple in self.guestsJSON) {
         Guest *guest = [[Guest alloc] initWithDictionary:guestTuple];
         [self.allGuests addObject:guest];

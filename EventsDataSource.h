@@ -13,14 +13,14 @@
 
 @protocol DataSourceReadyForUseDelegate;
 
-@interface EventsDataSource : NSObject<ConnectionFinishedDelegate>
+@interface EventsDataSource : NSObject <ConnectionFinishedDelegate>
 
-@property(nonatomic, weak) id<DataSourceReadyForUseDelegate> delegate;
+@property(nonatomic, weak) id <DataSourceReadyForUseDelegate> delegate;
 @property(nonatomic) BOOL eventsDataReadyForUse;
 
--(instancetype) initWithEventsManagedByUser:(NSInteger)userID;
--(NSInteger) numberOfEvents;
--(NSMutableArray *) getAllEvents;
--(Event *) eventAtIndex:(NSInteger)index;
+- (instancetype)init;
+- (BOOL)saveEventsData;
+- (NSInteger)numberOfEvents;
+- (Event *)eventAtIndex:(NSInteger)index;
 
 @end

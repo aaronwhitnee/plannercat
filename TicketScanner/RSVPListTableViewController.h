@@ -14,6 +14,6 @@
 
 @interface RSVPListTableViewController : UITableViewController<DataSourceReadyForUseDelegate,UITableViewDelegate,UITableViewDataSource>
 
-- (instancetype) initWithEventID:(NSInteger)eventID;
+- (instancetype)init;
 
 @end

@@ -38,7 +38,7 @@
 
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section {
     // Return the number of receipts the current user has (userId stored in NSUserDefaults)
-    return 3;
+    return 0;
 }
 
 /*

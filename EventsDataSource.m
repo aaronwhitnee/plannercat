@@ -10,7 +10,6 @@
 
 @interface EventsDataSource()
 
-@property(nonatomic) NSNumber *currentUserID;
 @property(nonatomic, strong) NSDictionary *currentUserInfo;
 @property(nonatomic, strong) NSDictionary *eventsJSON;
 @property(nonatomic, strong) NSMutableArray *allEvents;
@@ -20,47 +19,63 @@
 
 @implementation EventsDataSource
 
-- (instancetype) initWithEventsManagedByUser:(NSInteger)userID {
+- (instancetype)init {
     self = [super init];
     if (self) {
-        self.currentUserID = [NSNumber numberWithInteger:userID];
-        self.webServer.delegate = self;
-        self.eventsDataReadyForUse = NO;
-        [self.webServer performServerRequestType:@"events" withData:self.currentUserInfo];
+        NSString *path = [self eventsArchivePath];
+        _allEvents = [NSKeyedUnarchiver unarchiveObjectWithFile:path];
+        
+        if (!_allEvents) {
+            _allEvents = [NSMutableArray new];
+            [self.webServer performServerRequestType:@"events" withData:self.currentUserInfo];
+        }
+        
+        NSNotificationCenter *nc = [NSNotificationCenter defaultCenter];
+        [nc addObserver:self
+               selector:@selector(saveEventsData)
+                   name:UIApplicationDidEnterBackgroundNotification
+                 object:nil];
+        
+        _eventsDataReadyForUse = NO;
     }
     return self;
 }
 
-- (NSDictionary *) currentUserInfo {
+#pragma mark - Archiving
+
+- (BOOL)saveEventsData {
+    NSLog(@"saving user events data...");
+    NSString *path = [self eventsArchivePath];
+    return [NSKeyedArchiver archiveRootObject:self.allEvents toFile:path];
+}
+
+- (NSString *)eventsArchivePath {
+    NSArray *documentDirectories = NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES);
+    NSString *documentDirectory = [documentDirectories firstObject];
+    
+    return [documentDirectory stringByAppendingPathComponent:@"events.archive"];
+}
+
+- (NSDictionary *)currentUserInfo {
     if (!_currentUserInfo) {
-        _currentUserInfo = [NSDictionary dictionaryWithObjects:@[self.currentUserID] forKeys:@[@"userID"]];
+        NSNumber *userID = [[NSUserDefaults standardUserDefaults] valueForKey:@"appUserID"];
+        _currentUserInfo = [NSDictionary dictionaryWithObjects:@[userID] forKeys:@[@"userID"]];
     }
     return _currentUserInfo;
 }
 
-- (NSInteger) numberOfEvents {
+- (NSInteger)numberOfEvents {
     return [self.allEvents count];
 }
 
-- (NSMutableArray *) allEvents {
-    if (!_allEvents) {
-        _allEvents = [NSMutableArray new];
-    }
-    return _allEvents;
-}
-
-- (NSMutableArray *) getAllEvents {
-    return self.allEvents;
-}
-
-- (Event *) eventAtIndex:(NSInteger)index {
+- (Event *)eventAtIndex:(NSInteger)index {
     if (index >= [self.allEvents count]) {
         return nil;
     }
     return [self.allEvents objectAtIndex:index];
 }
 
-- (ServerCommunicator *) webServer {
+- (ServerCommunicator *)webServer {
     if (!_webServer) {
         _webServer = [[ServerCommunicator alloc] init];
         _webServer.delegate = self;
@@ -68,9 +83,9 @@
     return _webServer;
 }
 
-#pragma mark - ConnectionFinishedDelegate methods
+#pragma mark - ConnectionFinishedDelegate method
 
--(void) handleServerResponse:(NSDictionary *)response {
+- (void) handleServerResponse:(NSDictionary *)response {
     NSError *jsonError;
     NSString *eventsJSONString = [response valueForKey:@"eventsJsonString"];
     NSData *eventsData = [eventsJSONString dataUsingEncoding:NSUTF8StringEncoding];
@@ -81,7 +96,7 @@
         return;
     }
     
-    [self processEventsJSON];
+    [self generateEventsFromJSON];
     
     self.eventsDataReadyForUse = YES;
 
@@ -90,7 +105,7 @@
     }
 }
 
--(void) processEventsJSON {
+- (void) generateEventsFromJSON {
     for (NSDictionary *eventTuple in self.eventsJSON) {
         Event *event = [[Event alloc] initWithDictionary:eventTuple];
         [self.allEvents addObject:event];

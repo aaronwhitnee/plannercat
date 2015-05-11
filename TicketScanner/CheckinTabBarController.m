@@ -24,6 +24,7 @@
         self.activeEvent = event;
         self.navigationController.navigationBarHidden = YES;
         self.title = [self.activeEvent title];
+        self.navigationController.navigationBar.topItem.title = @"";
     }
     return self;
 }
@@ -49,9 +50,9 @@
 
 #pragma mark - Child View Controllers
 
--(RSVPListTableViewController *) rsvpListTableViewController {
+- (RSVPListTableViewController *)rsvpListTableViewController {
     if (!_rsvpListTableViewController) {
-        _rsvpListTableViewController = [[RSVPListTableViewController alloc] initWithEventID:[self.activeEvent eventID]];
+        _rsvpListTableViewController = [RSVPListTableViewController new];
         UIImage *img = [UIImage imageNamed:@"second"];
         UITabBarItem *tab = [[UITabBarItem alloc] initWithTitle:@"Guest List" image:img selectedImage:img];
         _rsvpListTableViewController.tabBarItem = tab;
@@ -59,10 +60,9 @@
     return _rsvpListTableViewController;
 }
 
--(ScannerViewController *) scannerViewController {
+- (ScannerViewController *)scannerViewController {
     if (!_scannerViewController) {
-//        _scannerViewController = [[ScannerViewController alloc] initWithEventID:[self.activeEvent eventID]];
-        _scannerViewController = [[ScannerViewController alloc] init];
+        _scannerViewController = [ScannerViewController new];
         UIImage *img = [UIImage imageNamed:@"first"];
         UITabBarItem *tab = [[UITabBarItem alloc] initWithTitle:@"Scan Tickets" image:img selectedImage:img];
         _scannerViewController.tabBarItem = tab;
@@ -70,10 +70,9 @@
     return _scannerViewController;
 }
 
--(RegistrationFormViewController *) registrationViewController {
+- (RegistrationFormViewController *)registrationViewController {
     if (!_registrationViewController) {
-//        _registrationViewController = [[RegistrationFormViewController alloc] initwithEventID:[self.activeEvent eventID]];
-        _registrationViewController = [[RegistrationFormViewController alloc] init];
+        _registrationViewController = [RegistrationFormViewController new];
         UIImage *img = [UIImage imageNamed:@"second"];
         UITabBarItem *tab = [[UITabBarItem alloc] initWithTitle:@"Register" image:img selectedImage:img];
         _registrationViewController.tabBarItem = tab;

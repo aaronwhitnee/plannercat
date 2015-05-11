@@ -19,7 +19,7 @@
 
 @implementation QRCodeCaptureView
 
--(instancetype) initVideoViewWithFrame:(CGRect)frame {
+- (instancetype) initVideoViewWithFrame:(CGRect)frame {
     if ((self = [super init]) == nil) {
         return nil;
     }
@@ -35,14 +35,14 @@
     return self;
 }
 
--(AVCaptureSession *) videoCaptureSession {
+- (AVCaptureSession *)videoCaptureSession {
     if (!_videoCaptureSession) {
         _videoCaptureSession = [[AVCaptureSession alloc] init];
     }
     return _videoCaptureSession;
 }
 
--(BOOL) startReading {
+- (BOOL) startReading {
     self.isReading = YES;
     
     NSError *readingError = [[NSError alloc] init];
@@ -73,14 +73,14 @@
     return YES;
 }
 
--(void) stopReading {
+- (void) stopReading {
     self.isReading = NO;
     [self.activityIndicator startAnimating];
     [self.videoCaptureSession stopRunning];
     self.videoCaptureSession = nil;
 }
 
--(ActivityIndicatorView *) activityIndicator {
+- (ActivityIndicatorView *)activityIndicator {
     if(_activityIndicator) {
         return _activityIndicator;
     }
