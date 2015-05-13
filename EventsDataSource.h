@@ -18,7 +18,7 @@
 @property(nonatomic, weak) id <DataSourceReadyForUseDelegate> delegate;
 @property(nonatomic) BOOL eventsDataReadyForUse;
 
-- (instancetype)init;
++ (instancetype)sharedEventsDataSource;
 - (BOOL)saveEventsData;
 - (NSInteger)numberOfEvents;
 - (Event *)eventAtIndex:(NSInteger)index;

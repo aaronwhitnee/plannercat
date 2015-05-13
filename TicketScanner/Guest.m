@@ -41,12 +41,19 @@ enum {SMALL_FONT_SIZE = 12, LARGE_FONT_SIZE = 18, THUMBNAIL_WIDTH = 60};
     [aCoder encodeObject:self.guestAttributes forKey:@"guestAttributes"];
 }
 
-- (void) setThumbnailFromImage:(UIImage *)image {
-    if (self.thumbnailImage) {
-        return;
+- (UIImage *)thumbnailImage {
+    if (!_thumbnailImage) {
+        [self generateThumbnailImage];
     }
-    
-    NSLog(@"began drawing image....");
+    return _thumbnailImage;
+}
+
+- (void)generateThumbnailImage {
+    NSLog(@"began drawing thumbnail image....");
+
+    NSURL *url = [NSURL URLWithString:[self photoURL]];
+    NSData *imageData = [NSData dataWithContentsOfURL:url];
+    UIImage *image = [UIImage imageWithData:imageData];
     
     CGSize originalImageSize = image.size;
     
@@ -60,7 +67,7 @@ enum {SMALL_FONT_SIZE = 12, LARGE_FONT_SIZE = 18, THUMBNAIL_WIDTH = 60};
     // Create a transparent bitmap context with a scaling factor equal to that of the screen
     UIGraphicsBeginImageContextWithOptions(newRect.size, NO, 0);
     
-    // Create a path that is a rounded rectangle
+    // Create a path that is an inscribed circle
     UIBezierPath *path = [UIBezierPath bezierPathWithOvalInRect:newRect];
     
     // Make all subsequent drawing clip to this rounded rectangle
@@ -85,23 +92,17 @@ enum {SMALL_FONT_SIZE = 12, LARGE_FONT_SIZE = 18, THUMBNAIL_WIDTH = 60};
     NSLog(@"finished drawing image.");
 }
 
-- (void) addValue:(NSString *)attrVal forAttribute:(NSString *)attrName {
+- (void)addValue:(NSString *)attrVal forAttribute:(NSString *)attrName {
     [self.guestAttributes setObject:attrVal forKey:attrName];
 }
 
-- (id) getValueForAttribute:(NSString *)attribute {
+- (id)getValueForAttribute:(NSString *)attribute {
     return [self.guestAttributes valueForKey:attribute];
-}
-
-- (UIImage *)smallSizeUserImage {
-    NSURL *url = [NSURL URLWithString:[self photoURL]];
-    NSData *imageData = [NSData dataWithContentsOfURL:url];
-    return [UIImage imageWithData:imageData];
 }
 
 #pragma mark - Guest Attributes
 
-- (NSInteger) userID {
+- (NSInteger)userID {
     return [[self getValueForAttribute:@"id"] integerValue];
 }
 
@@ -120,7 +121,7 @@ enum {SMALL_FONT_SIZE = 12, LARGE_FONT_SIZE = 18, THUMBNAIL_WIDTH = 60};
 - (NSString *)photoURL {
     // return [self getValueForAttribute:@"photo_url"];
     // Currently set to a randomly generated cat photo
-    return @"http://lorempixel.com/100/100/cats/";
+    return @"http://lorempixel.com/200/200/cats/";
 }
 
 #pragma mark - Guest Attributed Strings for List Entry

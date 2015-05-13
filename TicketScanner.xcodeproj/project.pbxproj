@@ -163,15 +163,15 @@
 		0C11280F1AB17CE000FD8C61 /* ViewControllers */ = {
 			isa = PBXGroup;
 			children = (
-				0C1741CC1AF8719600C9269A /* Checking In */,
-				0C1741D81AF88FD200C9269A /* Events & Tickets */,
 				0C1741DC1AF89E1900C9269A /* Main Navigation */,
+				0C1741CC1AF8719600C9269A /* Event Management */,
+				0C1741D81AF88FD200C9269A /* User's Events & Tickets */,
 			);
 			name = ViewControllers;
 			path = TicketScanner;
 			sourceTree = "<group>";
 		};
-		0C1741CC1AF8719600C9269A /* Checking In */ = {
+		0C1741CC1AF8719600C9269A /* Event Management */ = {
 			isa = PBXGroup;
 			children = (
 				0C855A9D1AB519CB0058D450 /* CheckinTabBarController.h */,
@@ -183,10 +183,10 @@
 				0C9874B91AA04DB9006A2F9A /* RegistrationFormViewController.h */,
 				0C9874BA1AA04DB9006A2F9A /* RegistrationFormViewController.m */,
 			);
-			name = "Checking In";
+			name = "Event Management";
 			sourceTree = "<group>";
 		};
-		0C1741D81AF88FD200C9269A /* Events & Tickets */ = {
+		0C1741D81AF88FD200C9269A /* User's Events & Tickets */ = {
 			isa = PBXGroup;
 			children = (
 				0C1741D21AF887F800C9269A /* ManagedEventsTableViewController.h */,
@@ -194,7 +194,7 @@
 				0C1741D51AF88ACB00C9269A /* TicketsTableViewController.h */,
 				0C1741D61AF88ACB00C9269A /* TicketsTableViewController.m */,
 			);
-			name = "Events & Tickets";
+			name = "User's Events & Tickets";
 			sourceTree = "<group>";
 		};
 		0C1741DC1AF89E1900C9269A /* Main Navigation */ = {

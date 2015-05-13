@@ -13,14 +13,13 @@
 
 @property(nonatomic, strong) UIImage *thumbnailImage;
 
-- (instancetype) initWithDictionary:(NSDictionary *)guestDictionary;
+- (instancetype)initWithDictionary:(NSDictionary *)guestDictionary;
 
-- (void) setThumbnailFromImage:(UIImage *)image;
-- (void) addValue:(NSString *)attrVal forAttribute:(NSString *)attrName;
-- (id) getValueForAttribute:(NSString *)attribute;
+- (void)addValue:(NSString *)attrVal forAttribute:(NSString *)attrName;
+- (id)getValueForAttribute:(NSString *)attribute;
+- (void)generateThumbnailImage;
 
 - (NSAttributedString *)descriptionForListEntry;
-- (UIImage *)smallSizeUserImage;
 
 - (NSInteger) userID;
 - (NSString *)firstName;

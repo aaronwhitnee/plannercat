@@ -19,25 +19,48 @@
 
 @implementation EventsDataSource
 
-- (instancetype)init {
++ (instancetype)sharedEventsDataSource {
+    static EventsDataSource *sharedEvents;
+    
+    static dispatch_once_t onceToken;
+    dispatch_once(&onceToken, ^{
+        sharedEvents = [[self alloc] initPrivate];
+    });
+    
+    return sharedEvents;
+}
+
+// Never call init!
+- (instancetype)init
+{
+    @throw [NSException exceptionWithName:@"Singleton"
+                                   reason:@"Use +[EventsDataSource sharedEventsDataSource]"
+                                 userInfo:nil];
+    return nil;
+}
+
+- (instancetype)initPrivate {
     self = [super init];
     if (self) {
+        // Retreive events data from archive
         NSString *path = [self eventsArchivePath];
         _allEvents = [NSKeyedUnarchiver unarchiveObjectWithFile:path];
         
+        // If archive is empty, init a new array with new downloaded data
         if (!_allEvents) {
+            NSLog(@"Downloading events data...");
             _allEvents = [NSMutableArray new];
             [self.webServer performServerRequestType:@"events" withData:self.currentUserInfo];
+            _eventsDataReadyForUse = NO;
+        }
+        // If array was archived, it's now ready for use
+        else {
+            NSLog(@"Unarchived events data...");
+            _eventsDataReadyForUse = YES;
         }
         
-        NSNotificationCenter *nc = [NSNotificationCenter defaultCenter];
-        [nc addObserver:self
-               selector:@selector(saveEventsData)
-                   name:UIApplicationDidEnterBackgroundNotification
-                 object:nil];
-        
-        _eventsDataReadyForUse = NO;
     }
+    
     return self;
 }
 
@@ -85,7 +108,7 @@
 
 #pragma mark - ConnectionFinishedDelegate method
 
-- (void) handleServerResponse:(NSDictionary *)response {
+- (void)handleServerResponse:(NSDictionary *)response {
     NSError *jsonError;
     NSString *eventsJSONString = [response valueForKey:@"eventsJsonString"];
     NSData *eventsData = [eventsJSONString dataUsingEncoding:NSUTF8StringEncoding];
@@ -105,7 +128,7 @@
     }
 }
 
-- (void) generateEventsFromJSON {
+- (void)generateEventsFromJSON {
     for (NSDictionary *eventTuple in self.eventsJSON) {
         Event *event = [[Event alloc] initWithDictionary:eventTuple];
         [self.allEvents addObject:event];

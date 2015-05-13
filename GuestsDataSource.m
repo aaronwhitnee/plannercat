@@ -22,7 +22,7 @@
 
 @implementation GuestsDataSource
 
-- (instancetype) initWithGuestsForEvent:(NSInteger)eventID {
+- (instancetype)initWithGuestsForEvent:(NSInteger)eventID {
     self = [super init];
     if (self) {
         self.currentEventID = [NSNumber numberWithInteger:eventID];
@@ -93,6 +93,10 @@
 - (void) processGuestsJSON {
     for (NSDictionary *guestTuple in self.guestsJSON) {
         Guest *guest = [[Guest alloc] initWithDictionary:guestTuple];
+//        dispatch_queue_t generateThumbnailQueue = dispatch_queue_create("Create Thumbnail Image", NULL);
+//        dispatch_async(generateThumbnailQueue, ^{
+//            [guest generateThumbnailImage];
+//        });
         [self.allGuests addObject:guest];
     }
     self.guestsJSON = nil;

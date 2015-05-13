@@ -105,51 +105,63 @@ static NSString *GuestCellID = @"guest";
     
     Guest *guest = [self.guestsDataSource guestAtIndex:(int)rowIndex];
     
-    dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_BACKGROUND, 0), ^{
-        [guest setThumbnailFromImage:[guest smallSizeUserImage]];
-    });
-    
+    // reusing the cell's subviews if they exist
     UIView *mainView = [cell viewWithTag: MAIN_VIEW_TAG];
-    
-    if ( mainView ) {
-        UIImageView *imageView = (UIImageView *)[mainView viewWithTag: USER_IMAGE_VIEW_TAG];
+    if (mainView) {
+        UIImageView *imageView = (UIImageView *)[mainView viewWithTag:USER_IMAGE_VIEW_TAG];
         NSArray *subViews = [imageView subviews];
         for ( UIView *v in subViews )
             [v removeFromSuperview];
         imageView.image = [guest thumbnailImage];
-        UILabel *guestLabel = (UILabel *)[mainView viewWithTag: USER_LABEL_TAG];
+        UILabel *guestLabel = (UILabel *)[mainView viewWithTag:USER_LABEL_TAG];
         guestLabel.attributedText = [guest descriptionForListEntry];
         return cell;
     }
     
-    CGRect bounds = [[UIScreen mainScreen] applicationFrame];
-    CGRect viewFrame = CGRectMake(0, 0, bounds.size.width, GUEST_CELL_HEIGHT);
-    UIView *thisView = [[UIView alloc] initWithFrame: viewFrame];
-    
-    UIImage *img = [guest thumbnailImage];
-    CGRect imgFrame = CGRectMake(2 * GAP_BTWN_VIEWS, (viewFrame.size.height - USER_IMAGE_WIDTH) / 2, USER_IMAGE_WIDTH, USER_IMAGE_WIDTH );
-    UIImageView *iView = [[UIImageView alloc] initWithImage: img];
-    iView.tag = USER_IMAGE_VIEW_TAG;
-    iView.frame = imgFrame;
-    [thisView addSubview: iView];
-    
-    UILabel *userInfoLabel = [[UILabel alloc]
-                               initWithFrame:CGRectMake(USER_IMAGE_WIDTH + 2 * 15, GAP_BTWN_VIEWS,
-                                                        viewFrame.size.width - USER_IMAGE_WIDTH - (2 * GAP_BTWN_VIEWS),
-                                                        viewFrame.size.height - GAP_BTWN_VIEWS)];
-    
-    userInfoLabel.tag = USER_LABEL_TAG;
-    NSAttributedString *desc = [guest descriptionForListEntry];
-    userInfoLabel.attributedText = desc;
-    
-    userInfoLabel.numberOfLines = 2;
-    [thisView addSubview: userInfoLabel];
-    
-    thisView.tag = MAIN_VIEW_TAG;
-    [[cell contentView] addSubview:thisView];
+    else {
+        // main cell view
+        CGRect bounds = [[UIScreen mainScreen] applicationFrame];
+        CGRect mainViewFrame = CGRectMake(0, 0, bounds.size.width, GUEST_CELL_HEIGHT);
+        mainView = [[UIView alloc] initWithFrame:mainViewFrame];
+        mainView.tag = MAIN_VIEW_TAG;
+        
+        // user info label view
+        UILabel *userInfoLabel = [[UILabel alloc] initWithFrame:CGRectMake(USER_IMAGE_WIDTH + 2 * 15, GAP_BTWN_VIEWS,
+                                                                           mainViewFrame.size.width - USER_IMAGE_WIDTH - (2 * GAP_BTWN_VIEWS),
+                                                                           mainViewFrame.size.height - GAP_BTWN_VIEWS)];
+        userInfoLabel.tag = USER_LABEL_TAG;
+        NSAttributedString *desc = [guest descriptionForListEntry];
+        userInfoLabel.attributedText = desc;
+        userInfoLabel.numberOfLines = 2;
+        [mainView addSubview:userInfoLabel];
+        
+        [[cell contentView] addSubview:mainView];
+        
+        // generate thumbnail image view
+        dispatch_queue_t thumnailQueue = dispatch_queue_create("Create Thumbnail Image", NULL);
+        dispatch_async(thumnailQueue, ^{
+            [guest generateThumbnailImage];
+            UIImage *thumbnail = [guest thumbnailImage];
+            CGRect thumbnailFrame = CGRectMake(2 * GAP_BTWN_VIEWS, (mainViewFrame.size.height - USER_IMAGE_WIDTH) / 2,
+                                               USER_IMAGE_WIDTH, USER_IMAGE_WIDTH );
+            UIImageView *imageView = [[UIImageView alloc] initWithImage:thumbnail];
+            imageView.tag = USER_IMAGE_VIEW_TAG;
+            imageView.frame = thumbnailFrame;
+            // [mainView addSubview:imageView];
+            dispatch_async(dispatch_get_main_queue(), ^{
+                UITableViewCell *cellToUpdate = cell;
+                UIView *mainViewToAdd = mainView;
+                [[cellToUpdate contentView] addSubview:mainView];
+                if (cellToUpdate) {
+                    [mainViewToAdd addSubview:imageView];
+                    [[cellToUpdate contentView] addSubview:mainViewToAdd];
+                    [cellToUpdate setNeedsLayout];
+                }
+            });
+        });
+    }
     
     return cell;
-
 }
 
 @end

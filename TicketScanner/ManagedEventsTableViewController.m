@@ -10,7 +10,6 @@
 
 @interface ManagedEventsTableViewController ()
 
-@property(nonatomic, strong) EventsDataSource *eventsDataSource;
 @property(nonatomic, strong) ActivityIndicatorView *activityIndicator;
 @property(nonatomic, strong) CheckinTabBarController *eventController;
 
@@ -59,21 +58,13 @@ enum { EVENT_CELL_HEIGHT = 100, GAP_BTWN_VIEWS = 5, IMAGE_HEIGHT = 0, IMAGE_WIDT
 
 #pragma mark - Table view data source
 
-- (EventsDataSource *)eventsDataSource {
-    if (!_eventsDataSource) {
-        _eventsDataSource = [[EventsDataSource alloc] init];
-        _eventsDataSource.delegate = self;
-    }
-    return _eventsDataSource;
-}
-
 - (void)dataSourceReadyForUse:(EventsDataSource *)dataSource {
     [self.tableView reloadData];
     [self.activityIndicator stopAnimating];
 }
 
 - (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView {
-    if (! [self.eventsDataSource eventsDataReadyForUse]) {
+    if (! [[EventsDataSource sharedEventsDataSource] eventsDataReadyForUse]) {
         [self.activityIndicator startAnimating];
         self.activityIndicator.hidesWhenStopped = YES;
     }
@@ -81,8 +72,8 @@ enum { EVENT_CELL_HEIGHT = 100, GAP_BTWN_VIEWS = 5, IMAGE_HEIGHT = 0, IMAGE_WIDT
 }
 
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section {
-    NSLog(@"%s: Number of rows in Table View: %d", __func__, (int)[self.eventsDataSource numberOfEvents]);
-    return [self.eventsDataSource numberOfEvents];
+    NSLog(@"%s: Number of rows in Table View: %d", __func__, (int)[[EventsDataSource sharedEventsDataSource] numberOfEvents]);
+    return [[EventsDataSource sharedEventsDataSource] numberOfEvents];
 }
 
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath {
@@ -103,7 +94,7 @@ enum { EVENT_CELL_HEIGHT = 100, GAP_BTWN_VIEWS = 5, IMAGE_HEIGHT = 0, IMAGE_WIDT
 - (UITableViewCell *)eventViewForIndex:(NSInteger)rowIndex withTableViewCell:(UITableViewCell *)cell {
     enum {MAIN_VIEW_TAG = 100, EVENT_LABEL_TAG = 200};
     
-    Event *event = [self.eventsDataSource eventAtIndex:(int)rowIndex];
+    Event *event = [[EventsDataSource sharedEventsDataSource] eventAtIndex:(int)rowIndex];
     UIView *view = [cell viewWithTag: MAIN_VIEW_TAG];
     
     if (view) {
