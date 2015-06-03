@@ -13,4 +13,6 @@
 
 @interface LoginViewController : UIViewController<ConnectionFinishedDelegate, UITextFieldDelegate>
 
+@property (nonatomic, weak) id delegate;
+
 @end

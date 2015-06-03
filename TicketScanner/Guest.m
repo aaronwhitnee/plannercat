@@ -7,11 +7,11 @@
 //
 
 #import "Guest.h"
+#import "UserImageStore.h"
 
 @interface Guest()
 
 @property(nonatomic,strong) NSMutableDictionary *guestAttributes;
-@property(nonatomic, strong) UIImage *smallSizeUserImage;
 
 @end
 
@@ -19,11 +19,16 @@ enum {SMALL_FONT_SIZE = 12, LARGE_FONT_SIZE = 18, THUMBNAIL_WIDTH = 60};
 
 @implementation Guest
 
-- (instancetype) initWithDictionary:(NSDictionary *)guestDictionary {
+- (instancetype)initWithDictionary:(NSDictionary *)guestDictionary {
     self = [super init];
     if (self) {
-        self.guestAttributes = [NSMutableDictionary dictionaryWithDictionary:guestDictionary];
+        _guestAttributes = [NSMutableDictionary dictionaryWithDictionary:guestDictionary];
+        
+        NSUUID *uuid = [[NSUUID alloc] init];
+        NSString *key = [uuid UUIDString];
+        _userKey = key;
     }
+    
     return self;
 }
 
@@ -32,23 +37,28 @@ enum {SMALL_FONT_SIZE = 12, LARGE_FONT_SIZE = 18, THUMBNAIL_WIDTH = 60};
 - (instancetype)initWithCoder:(NSCoder *)aDecoder {
     self = [super init];
     if (self) {
-        [aDecoder decodeObjectForKey:@"guestAttributes"];
+        _guestAttributes = [aDecoder decodeObjectForKey:@"guestAttributes"];
+        _thumbnailImage = [aDecoder decodeObjectForKey:@"thumbnailImage"];
+        _userKey = [aDecoder decodeObjectForKey:@"userKey"];
     }
     return self;
 }
 
 - (void)encodeWithCoder:(NSCoder *)aCoder {
     [aCoder encodeObject:self.guestAttributes forKey:@"guestAttributes"];
+    [aCoder encodeObject:self.thumbnailImage forKey:@"thumbnailImage"];
+    [aCoder encodeObject:self.userKey forKey:@"userKey"];
 }
 
-- (UIImage *)thumbnailImage {
-    if (!_thumbnailImage) {
-        [self generateThumbnailImage];
+- (BOOL)thumbnailImageHasRendered {
+    return _thumbnailImage != nil;
+}
+
+- (UIImage *)thumbnailImageWithSize:(CGSize)desiredSize {
+    if (_thumbnailImage) {
+        return _thumbnailImage;
     }
-    return _thumbnailImage;
-}
-
-- (void)generateThumbnailImage {
+    
     NSLog(@"began drawing thumbnail image....");
 
     NSURL *url = [NSURL URLWithString:[self photoURL]];
@@ -58,7 +68,7 @@ enum {SMALL_FONT_SIZE = 12, LARGE_FONT_SIZE = 18, THUMBNAIL_WIDTH = 60};
     CGSize originalImageSize = image.size;
     
     // The rectangle of the thumbnail
-    CGRect newRect = CGRectMake(0, 0, THUMBNAIL_WIDTH, THUMBNAIL_WIDTH);
+    CGRect newRect = CGRectMake(0, 0, desiredSize.width, desiredSize.height);
     
     // Figure out a scaling ratio to make sure the same aspect ratio is maintained
     float ratio = MAX(newRect.size.width / originalImageSize.width,
@@ -84,12 +94,16 @@ enum {SMALL_FONT_SIZE = 12, LARGE_FONT_SIZE = 18, THUMBNAIL_WIDTH = 60};
     [image drawInRect:projectRect];
     
     // Get the image from the image context - save it as the thumbnail
-    UIImage *smallImage = UIGraphicsGetImageFromCurrentImageContext();
-    self.thumbnailImage = smallImage;
+    _thumbnailImage = UIGraphicsGetImageFromCurrentImageContext();
+    
+    // Save to image cache
+    [[UserImageStore sharedStore] setImage:[_thumbnailImage copy] forKey:self.userKey];
     
     // Cleanup image context resources
     UIGraphicsEndImageContext();
     NSLog(@"finished drawing image.");
+
+    return _thumbnailImage;
 }
 
 - (void)addValue:(NSString *)attrVal forAttribute:(NSString *)attrName {
@@ -121,7 +135,7 @@ enum {SMALL_FONT_SIZE = 12, LARGE_FONT_SIZE = 18, THUMBNAIL_WIDTH = 60};
 - (NSString *)photoURL {
     // return [self getValueForAttribute:@"photo_url"];
     // Currently set to a randomly generated cat photo
-    return @"http://lorempixel.com/200/200/cats/";
+    return @"http://lorempixel.com/300/300/cats/";
 }
 
 #pragma mark - Guest Attributed Strings for List Entry

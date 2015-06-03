@@ -62,7 +62,7 @@ enum {MENU_ITEM_HEIGHT = 90, MENU_FONT_SIZE = 20};
     return _settingsBarButton;
 }
 
-- (void) didTapSettingsBarButton:(UIBarButtonItem *)sender {
+- (void)didTapSettingsBarButton:(UIBarButtonItem *)sender {
     SettingsTableViewController *settingsViewController = [[SettingsTableViewController alloc] init];
     [self.navigationController pushViewController:settingsViewController animated: YES];
 }
@@ -92,11 +92,11 @@ enum {MENU_ITEM_HEIGHT = 90, MENU_FONT_SIZE = 20};
     return cell;
 }
 
-- (CGFloat) tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath {
+- (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath {
     return MENU_ITEM_HEIGHT;
 }
 
-- (void) tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath {
+- (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath {
     if ([[self.menuItemLabels objectAtIndex:[indexPath row]] isEqualToString:@"My Events"]) {
         [self.navigationController pushViewController:self.userEventsTableView animated:YES];
     }

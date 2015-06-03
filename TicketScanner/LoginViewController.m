@@ -33,9 +33,6 @@ enum {FIELD_WIDTH = 250, FIELD_HEIGHT = 60, BUTTON_FONT_SIZE = 16, TITLE_FONT_SI
     
     self.scrollView = [[UIScrollView alloc] initWithFrame:self.view.frame];
     
-    // you ain't goin' nowhere till you login first!
-    self.navigationController.navigationBarHidden = YES;
-    
     [self.scrollView addSubview: self.activityIndicator];
     [self.scrollView addSubview: self.userEmailField];
     [self.scrollView addSubview: self.userPasswordField];
@@ -58,7 +55,7 @@ enum {FIELD_WIDTH = 250, FIELD_HEIGHT = 60, BUTTON_FONT_SIZE = 16, TITLE_FONT_SI
     [super viewWillDisappear:animated];
 }
 
-- (void) didTapSubmitButton:(id) sender{
+- (void)didTapSubmitButton:(id)sender{
     // Show pretty spinny thingy while waiting for response from server
     [self.activityIndicator startAnimating];
     self.submitButton.alpha = 0.5;
@@ -76,6 +73,7 @@ enum {FIELD_WIDTH = 250, FIELD_HEIGHT = 60, BUTTON_FONT_SIZE = 16, TITLE_FONT_SI
 
 // Check response for valid login
 - (void) handleServerResponse:(NSDictionary *)response {
+    [self.activityIndicator stopAnimating];
     self.submitButton.alpha = 1.0;
     self.submitButton.userInteractionEnabled = YES;
 
@@ -89,19 +87,19 @@ enum {FIELD_WIDTH = 250, FIELD_HEIGHT = 60, BUTTON_FONT_SIZE = 16, TITLE_FONT_SI
         [[NSUserDefaults standardUserDefaults] setValue:userEmail forKey:@"appUserEmail"];
         
         [self clearTextFields];
-        [self.activityIndicator stopAnimating];
-        MainMenuTableViewController *mainMenu = [[MainMenuTableViewController alloc] init];
-        [self.navigationController pushViewController:mainMenu animated:YES];
+        
+        [self.navigationController popViewControllerAnimated:NO];
+        if ([self.delegate respondsToSelector:@selector(dismissViewControllerAnimated:completion:)]) {
+            [self.delegate dismissViewControllerAnimated:YES completion:nil];
+        }
     }
     // Valid login, but with server error
     else if ([[response valueForKey:@"valid"] integerValue] == 1 &&
              [[response valueForKey:@"status"] isEqualToString:@"error"]) {
         NSLog(@"Error logging in.");
-        [self.activityIndicator stopAnimating];
     }
     else {
         NSLog(@"Invalid login.");
-        [self.activityIndicator stopAnimating];
         [self displayAlertWithTitle:@"Invalid Login"];
     }
 }
@@ -123,7 +121,7 @@ enum {FIELD_WIDTH = 250, FIELD_HEIGHT = 60, BUTTON_FONT_SIZE = 16, TITLE_FONT_SI
 
 # pragma mark - UI Alerts
 
-- (void) displayAlertWithTitle:(NSString *)title {
+- (void)displayAlertWithTitle:(NSString *)title {
     if ([[UIDevice currentDevice].systemVersion floatValue] < 8.0) {
         self.alertView.title = title;
         [self.alertView show];
@@ -159,16 +157,16 @@ enum {FIELD_WIDTH = 250, FIELD_HEIGHT = 60, BUTTON_FONT_SIZE = 16, TITLE_FONT_SI
 
 # pragma mark - UITextFields and UITextFieldDelegate methods
 
-- (void) textFieldDidBeginEditing:(UITextField *)textField {
+- (void)textFieldDidBeginEditing:(UITextField *)textField {
     self.activeField = textField;
 }
 
-- (void) textFieldDidEndEditing:(UITextField *)textField {
+- (void)textFieldDidEndEditing:(UITextField *)textField {
     self.activeField = nil;
     [textField resignFirstResponder];
 }
 
-- (void) clearTextFields {
+- (void)clearTextFields {
     self.userEmailField.text = nil;
     self.userPasswordField.text = nil;
     if (self.activeField) {
@@ -251,7 +249,6 @@ enum {FIELD_WIDTH = 250, FIELD_HEIGHT = 60, BUTTON_FONT_SIZE = 16, TITLE_FONT_SI
                                              selector:@selector(keyboardWillBeHidden:)
                                                  name:UIKeyboardWillHideNotification
                                                object:nil];
-    
 }
 
 - (void)deregisterFromKeyboardNotifications {

@@ -42,23 +42,28 @@
 - (instancetype)initPrivate {
     self = [super init];
     if (self) {
-        // Retreive events data from archive
+        // Attempt to fetch events data from disk
         NSString *path = [self eventsArchivePath];
         _allEvents = [NSKeyedUnarchiver unarchiveObjectWithFile:path];
         
-        // If archive is empty, init a new array with new downloaded data
+        // If archive is empty, init a new array and download new data
         if (!_allEvents) {
-            NSLog(@"Downloading events data...");
+            NSLog(@"Downloading new events data...");
             _allEvents = [NSMutableArray new];
-            [self.webServer performServerRequestType:@"events" withData:self.currentUserInfo];
             _eventsDataReadyForUse = NO;
+            [self.webServer performServerRequestType:@"events" withData:self.currentUserInfo];
         }
-        // If array was archived, it's now ready for use
+        // If array was unarchived, it's now ready for use
         else {
-            NSLog(@"Unarchived events data...");
+            NSLog(@"Fetched events data from disk...");
             _eventsDataReadyForUse = YES;
         }
         
+        // Save events data to disk when entering background
+        [[NSNotificationCenter defaultCenter] addObserver:self
+                                                 selector:@selector(saveEventsData)
+                                                     name:UIApplicationDidEnterBackgroundNotification
+                                                   object:nil];
     }
     
     return self;
@@ -67,7 +72,7 @@
 #pragma mark - Archiving
 
 - (BOOL)saveEventsData {
-    NSLog(@"saving user events data...");
+    NSLog(@"saving user events data to disk...");
     NSString *path = [self eventsArchivePath];
     return [NSKeyedArchiver archiveRootObject:self.allEvents toFile:path];
 }

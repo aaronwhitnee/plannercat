@@ -57,12 +57,8 @@ static NSString *SettingsCellID = @"SettingsCell";
 
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath {
     if ([[self.settings objectAtIndex:[indexPath row]] isEqualToString:@"Log Out"]) {
-        // Clear NSUserDefaults and return to login screen
-        NSLog(@"Logging out...");
+        // Post userLogout notification
         [[NSNotificationCenter defaultCenter] postNotificationName:@"userLogout" object:self];
-        
-        // Return to login screen
-        [self.navigationController popToRootViewControllerAnimated:YES];
     }
 }
 

@@ -10,6 +10,7 @@
 
 @interface ManagedEventsTableViewController ()
 
+@property(nonatomic, strong) EventsDataSource *eventsDataSource;
 @property(nonatomic, strong) ActivityIndicatorView *activityIndicator;
 @property(nonatomic, strong) CheckinTabBarController *eventController;
 
@@ -22,6 +23,9 @@ enum { EVENT_CELL_HEIGHT = 100, GAP_BTWN_VIEWS = 5, IMAGE_HEIGHT = 0, IMAGE_WIDT
 
 - (void)viewDidLoad {
     [super viewDidLoad];
+    
+    self.eventsDataSource = [EventsDataSource sharedEventsDataSource];
+    self.eventsDataSource.delegate = self;
     
     self.navigationController.navigationBar.topItem.title = @"";
     

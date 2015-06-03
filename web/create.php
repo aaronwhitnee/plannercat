@@ -166,5 +166,7 @@
 			}
 		}
 		/* END DYNAMIC FIELD INSERTION */
+
+		echo "Event ID = " . $eID;
 	}
 ?>

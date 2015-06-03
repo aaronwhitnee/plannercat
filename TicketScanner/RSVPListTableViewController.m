@@ -7,6 +7,7 @@
 //
 
 #import "RSVPListTableViewController.h"
+#import "UserImageStore.h"
 
 @interface RSVPListTableViewController ()
 
@@ -59,7 +60,7 @@ static NSString *GuestCellID = @"guest";
 
 - (GuestsDataSource *)guestsDataSource {
     if (!_guestsDataSource) {
-        _guestsDataSource = [[GuestsDataSource alloc] initWithGuestsForEvent:8];
+        _guestsDataSource = [[GuestsDataSource alloc] initWithGuestsForEvent:12];
         _guestsDataSource.delegate = self;
     }
     return _guestsDataSource;
@@ -86,6 +87,7 @@ static NSString *GuestCellID = @"guest";
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath {
     UITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:GuestCellID forIndexPath:indexPath];
     cell = [self guestViewForIndex:[indexPath row] withTableViewCell:cell];
+    cell.selectionStyle = UITableViewCellSelectionStyleNone;
     
     return cell;
 }
@@ -112,12 +114,11 @@ static NSString *GuestCellID = @"guest";
         NSArray *subViews = [imageView subviews];
         for ( UIView *v in subViews )
             [v removeFromSuperview];
-        imageView.image = [guest thumbnailImage];
+        imageView.image = [guest thumbnailImageWithSize:CGSizeMake(USER_IMAGE_WIDTH, USER_IMAGE_WIDTH)];
         UILabel *guestLabel = (UILabel *)[mainView viewWithTag:USER_LABEL_TAG];
         guestLabel.attributedText = [guest descriptionForListEntry];
         return cell;
     }
-    
     else {
         // main cell view
         CGRect bounds = [[UIScreen mainScreen] applicationFrame];
@@ -135,30 +136,49 @@ static NSString *GuestCellID = @"guest";
         userInfoLabel.numberOfLines = 2;
         [mainView addSubview:userInfoLabel];
         
-        [[cell contentView] addSubview:mainView];
-        
-        // generate thumbnail image view
-        dispatch_queue_t thumnailQueue = dispatch_queue_create("Create Thumbnail Image", NULL);
-        dispatch_async(thumnailQueue, ^{
-            [guest generateThumbnailImage];
-            UIImage *thumbnail = [guest thumbnailImage];
-            CGRect thumbnailFrame = CGRectMake(2 * GAP_BTWN_VIEWS, (mainViewFrame.size.height - USER_IMAGE_WIDTH) / 2,
-                                               USER_IMAGE_WIDTH, USER_IMAGE_WIDTH );
+        // user thumbnail image view
+        CGRect thumbnailFrame = CGRectMake(2 * GAP_BTWN_VIEWS, (mainViewFrame.size.height - USER_IMAGE_WIDTH) / 2,
+                                           USER_IMAGE_WIDTH, USER_IMAGE_WIDTH );
+        UIImage *thumbnail = [[UserImageStore sharedStore] imageForKey:guest.userKey];
+        // best case scenario - fetch from cache
+        if (thumbnail) {
             UIImageView *imageView = [[UIImageView alloc] initWithImage:thumbnail];
             imageView.tag = USER_IMAGE_VIEW_TAG;
             imageView.frame = thumbnailFrame;
-            // [mainView addSubview:imageView];
-            dispatch_async(dispatch_get_main_queue(), ^{
-                UITableViewCell *cellToUpdate = cell;
-                UIView *mainViewToAdd = mainView;
-                [[cellToUpdate contentView] addSubview:mainView];
-                if (cellToUpdate) {
-                    [mainViewToAdd addSubview:imageView];
-                    [[cellToUpdate contentView] addSubview:mainViewToAdd];
-                    [cellToUpdate setNeedsLayout];
-                }
-            });
-        });
+            [mainView addSubview:imageView];
+            [[cell contentView] addSubview:mainView];
+        }
+        else {
+            // okay scenario - fetch from guest attributes ??? not possible, just skip to rendering it ???
+            if ([guest thumbnailImageHasRendered]) {
+                thumbnail = [guest thumbnailImageWithSize:CGSizeMake(USER_IMAGE_WIDTH, USER_IMAGE_WIDTH)];
+                UIImageView *imageView = [[UIImageView alloc] initWithImage:thumbnail];
+                imageView.tag = USER_IMAGE_VIEW_TAG;
+                imageView.frame = thumbnailFrame;
+                [mainView addSubview:imageView];
+                [[cell contentView] addSubview:mainView];
+            }
+            // worst case - render in background
+            else {
+                dispatch_queue_t thumbnailQueue = dispatch_queue_create("", NULL);
+                dispatch_async(thumbnailQueue, ^{
+                    UIImage *thumbnail = [guest thumbnailImageWithSize:CGSizeMake(USER_IMAGE_WIDTH, USER_IMAGE_WIDTH)];
+                    UIImageView *imageView = [[UIImageView alloc] initWithImage:thumbnail];
+                    imageView.tag = USER_IMAGE_VIEW_TAG;
+                    imageView.frame = thumbnailFrame;
+                    
+                    // update cell on main thread
+                    dispatch_async(dispatch_get_main_queue(), ^{
+                        UITableViewCell *cellToUpdate = cell;
+                        if (cellToUpdate) {
+                            [mainView addSubview:imageView];
+                            [[cellToUpdate contentView] addSubview:mainView];
+                        }
+                    });
+                });
+            }
+            // TODO: use a placeholder image until user image finishes rendering
+        }
     }
     
     return cell;

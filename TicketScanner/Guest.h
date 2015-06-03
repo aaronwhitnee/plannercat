@@ -11,17 +11,16 @@
 
 @interface Guest : NSObject <NSCoding>
 
-@property(nonatomic, strong) UIImage *thumbnailImage;
+@property (nonatomic, strong) UIImage *thumbnailImage;
+@property (nonatomic, copy) NSString *userKey;
 
 - (instancetype)initWithDictionary:(NSDictionary *)guestDictionary;
 
-- (void)addValue:(NSString *)attrVal forAttribute:(NSString *)attrName;
-- (id)getValueForAttribute:(NSString *)attribute;
-- (void)generateThumbnailImage;
-
+- (BOOL)thumbnailImageHasRendered;
+- (UIImage *)thumbnailImageWithSize:(CGSize)desiredSize;
 - (NSAttributedString *)descriptionForListEntry;
 
-- (NSInteger) userID;
+- (NSInteger)userID;
 - (NSString *)firstName;
 - (NSString *)lastName;
 - (NSString *)email;

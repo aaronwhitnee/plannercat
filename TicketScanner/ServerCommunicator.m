@@ -62,18 +62,18 @@
     self.connection = [[NSURLConnection alloc] initWithRequest:self.request delegate:self startImmediately:YES];
 }
 
-- (void) connection:(NSURLConnection *)connection didReceiveResponse:(NSURLResponse *)response {
+- (void)connection:(NSURLConnection *)connection didReceiveResponse:(NSURLResponse *)response {
     NSLog(@"%s: %@", __func__, response);
     self.jsonResponse = nil;
     self.receivedData = nil;
 }
 
-- (void) connection:(NSURLConnection *)connection didReceiveData:(NSData *)data {
+- (void)connection:(NSURLConnection *)connection didReceiveData:(NSData *)data {
     NSLog(@"Received %d bytes of data.", (int)[data length]);
     [self.receivedData appendData:data];
 }
 
-- (void) connectionDidFinishLoading:(NSURLConnection *)connection {
+- (void)connectionDidFinishLoading:(NSURLConnection *)connection {
     NSError *jsonError;
     NSDictionary *responseJSON = [NSJSONSerialization JSONObjectWithData:self.receivedData options:kNilOptions error:&jsonError];
     NSLog(@"Received data: %@", responseJSON);

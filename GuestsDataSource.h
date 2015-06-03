@@ -11,8 +11,6 @@
 #import "ServerCommunicator.h"
 #import "Guest.h"
 
-#warning Need to convert/save to a persistent data store
-
 @protocol DataSourceReadyForUseDelegate;
 
 @interface GuestsDataSource : NSObject<ConnectionFinishedDelegate>

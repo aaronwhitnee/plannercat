@@ -27,33 +27,41 @@
     self.window = [[UIWindow alloc] initWithFrame:[[UIScreen mainScreen] bounds]];
     [self.window makeKeyAndVisible];
     
-    LoginViewController *loginScreen = [[LoginViewController alloc] init];
-    self.mainNavigation = [[UINavigationController alloc] initWithRootViewController:loginScreen];
+    // Set the navigation controller as the app's root view controller
+    MainMenuTableViewController *mainMenu = [[MainMenuTableViewController alloc] init];
+    self.mainNavigation = [[UINavigationController alloc] initWithRootViewController:mainMenu];
+    self.window.rootViewController = self.mainNavigation;
     
-    // Make nav bar transparent
+    // Styling the nav bar
     [self.mainNavigation.navigationBar setBackgroundImage:[UIImage new]
                                                   forBarMetrics:UIBarMetricsDefault];
     self.mainNavigation.navigationBar.shadowImage = [UIImage new];
-    self.mainNavigation.navigationBar.translucent = YES;
+    self.mainNavigation.navigationBar.translucent = NO;
     
-    // Display main menu if user is already logged in
-    if ([[NSUserDefaults standardUserDefaults] valueForKey:@"appUserID"]) {
-        MainMenuTableViewController *mainMenu = [[MainMenuTableViewController alloc] init];
-        [self.mainNavigation pushViewController:mainMenu animated:NO];
+    // Display login screen if no user is currently logged in
+    if ([[NSUserDefaults standardUserDefaults] valueForKey:@"appUserID"] == nil) {
+        __strong LoginViewController *loginScreen = [[LoginViewController alloc] init];
+        loginScreen.delegate = self.mainNavigation;
+        [self.mainNavigation presentViewController:loginScreen animated:NO completion:nil];
     }
-    self.window.rootViewController = self.mainNavigation;
     
     return YES;
 }
 
 - (void)userLogout:(UIResponder *)application {
+    NSLog(@"Logging out...");
+    
+    // Remove user defaults (user ID and email)
     NSString *appDomain = [[NSBundle mainBundle] bundleIdentifier];
     [[NSUserDefaults standardUserDefaults] removePersistentDomainForName:appDomain];
-    [[NSNotificationCenter defaultCenter] removeObserver:[EventsDataSource sharedEventsDataSource]
-                                                    name:UIApplicationDidEnterBackgroundNotification
-                                                  object:nil];
-    // Return to login screen
-    [self.mainNavigation popToRootViewControllerAnimated:YES];
+    
+    // Display login screen
+    __strong LoginViewController *loginScreen = [[LoginViewController alloc] init];
+    loginScreen.delegate = self.mainNavigation;
+    loginScreen.modalTransitionStyle = UIModalTransitionStyleCoverVertical;
+    [self.mainNavigation presentViewController:loginScreen animated:YES completion:^{
+        [self.mainNavigation popViewControllerAnimated:NO];
+    }];
 }
 
 - (void)application:(UIApplication *)application didReceiveRemoteNotification:(NSDictionary *)userInfo {
